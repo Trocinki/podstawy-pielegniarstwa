@@ -1,0 +1,4020 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- KONFIG: NAZWA-STRONY — tytuł zakładki jest nadpisywany przez stałą PAGE_TITLE na początku sekcji <script> (to tylko wartość zapasowa) -->
+<title>Podstawy pielęgniarstwa</title>
+<!-- KONFIG: FAVICON — ikona na zakładce przeglądarki (tu: emoji 🐱 zakodowane jako SVG; wystarczy podmienić emoji albo wstawić link do pliku .ico/.png) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💊%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   KONFIG: KOLORY — motywy i paleta strony
+   ------------------------------------------------------------
+   Motyw CIEMNY jest domyślny (:root). Motyw JASNY nadpisuje
+   zmienne w bloku html[data-theme="light"] poniżej.
+   UWAGA: zmienne w sekcji „JS: system nagrody" są nadpisywane
+   przez funkcję applyBloom() — możesz zmienić wartości startowe,
+   ale NIE zmieniaj ich nazw.
+   ============================================================ */
+:root{
+  color-scheme:dark;
+
+  /* — JS: system nagrody (bloom) — */
+  --bloom:0;
+  --bg-h:226; --bg-s:20%; --bg-l:5%;
+  --surface-h:226; --surface-s:22%; --surface-l:9%;
+  --accent-h:205; --accent-s:22%; --accent-l:35%;
+  --accent2-h:250;
+  --aurora:0;
+  --glow:0px;
+
+  /* — Tło i tekst — */
+  --bg:hsl(var(--bg-h) var(--bg-s) var(--bg-l));
+  --ink:hsl(225 36% 94%);
+  --ink-soft:hsl(225 15% 65%);
+
+  /* — Akcenty (pochodne zmiennych JS — bloom nadal je „rozświetla") — */
+  --accent:hsl(var(--accent-h) calc(var(--accent-s) + 18%) calc(var(--accent-l) + 11%));
+  --accent2:hsl(var(--accent2-h) calc(var(--accent-s) + 26%) calc(var(--accent-l) + 17%));
+  --on-accent:hsl(220 40% 99%);
+  --gold:#e6b873;
+  --gold-bg:hsl(36 80% 60% / .12);
+  --gold-bd:hsl(36 70% 55% / .38);
+
+  /* — Dobrze / źle — */
+  --ok:hsl(156 56% 52%);
+  --ok-ink:hsl(150 52% 82%);
+  --ok-bg:hsl(156 60% 45% / .12);
+  --ok-bd:hsl(156 52% 48% / .35);
+  --no:hsl(353 72% 70%);
+  --no-ink:hsl(353 78% 88%);
+  --no-bg:hsl(353 70% 58% / .12);
+  --no-bd:hsl(353 62% 58% / .38);
+
+  /* — Szkło, linie, cienie — */
+  --glass:hsl(var(--surface-h) var(--surface-s) calc(var(--surface-l) + 5%) / .52);
+  --glass-strong:hsl(var(--surface-h) var(--surface-s) calc(var(--surface-l) + 5%) / .86);
+  --field:hsl(225 50% 72% / .06);
+  --field-hover:hsl(225 55% 76% / .11);
+  --chip:hsl(225 45% 76% / .1);
+  --line:hsl(225 32% 66% / .14);
+  --line-strong:hsl(225 42% 74% / .28);
+  --edge:inset 0 1px 0 hsl(0 0% 100% / .07);
+  --shadow-soft:0 18px 48px -24px hsl(230 60% 2% / .9);
+  --shadow-pop:0 32px 80px -24px hsl(230 60% 2% / .95);
+  --blur:blur(22px) saturate(160%);
+  --ease:cubic-bezier(.22,.68,.28,1);
+  --aurora-base:.14;
+}
+
+/* — Motyw JASNY (przełącznik w menu ⚙) — */
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg:hsl(var(--bg-h) 36% calc(103% - var(--bg-l)));
+  --ink:hsl(228 32% 15%);
+  --ink-soft:hsl(228 13% 42%);
+  --accent:hsl(var(--accent-h) calc(var(--accent-s) + 30%) calc(var(--accent-l) * .82));
+  --accent2:hsl(var(--accent2-h) calc(var(--accent-s) + 34%) calc(var(--accent-l) * .94));
+  --on-accent:hsl(0 0% 100%);
+  --gold:hsl(33 72% 40%);
+  --gold-bg:hsl(36 85% 52% / .13);
+  --gold-bd:hsl(36 70% 45% / .4);
+  --ok:hsl(156 62% 33%);
+  --ok-ink:hsl(158 65% 21%);
+  --ok-bg:hsl(156 55% 42% / .13);
+  --ok-bd:hsl(156 45% 38% / .35);
+  --no:hsl(353 62% 46%);
+  --no-ink:hsl(353 62% 31%);
+  --no-bg:hsl(353 75% 52% / .1);
+  --no-bd:hsl(353 55% 50% / .32);
+  --glass:hsl(var(--surface-h) 55% calc(108% - var(--surface-l)) / .55);
+  --glass-strong:hsl(var(--surface-h) 60% calc(108% - var(--surface-l)) / .85);
+  --field:hsl(228 45% 24% / .05);
+  --field-hover:hsl(228 50% 26% / .09);
+  --chip:hsl(228 42% 24% / .08);
+  --line:hsl(228 28% 32% / .15);
+  --line-strong:hsl(228 32% 28% / .3);
+  --edge:inset 0 1px 0 hsl(0 0% 100% / .6);
+  --shadow-soft:0 18px 44px -26px hsl(228 55% 30% / .45);
+  --shadow-pop:0 30px 70px -28px hsl(228 55% 25% / .5);
+  --aurora-base:.1;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Hanken Grotesk",sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  min-height:100vh;
+  line-height:1.55;
+  transition:background .9s var(--ease),color .5s ease;
+  position:relative;
+  overflow-x:hidden;
+}
+/* Aurora — kolorowa poświata w tle (nasila się przy dobrych odpowiedziach) */
+body::before{
+  content:"";position:fixed;inset:-20% -10% -10% -10%;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(42% 52% at 16% 20%, hsl(var(--accent-h) 80% 58% / .5), transparent 70%),
+    radial-gradient(46% 56% at 84% 16%, hsl(var(--accent2-h) 82% 60% / .45), transparent 72%),
+    radial-gradient(56% 62% at 50% 94%, hsl(calc(var(--accent-h) + 40) 78% 55% / .4), transparent 75%);
+  opacity:calc(var(--aurora-base) + var(--aurora) * .8);
+  filter:blur(26px) saturate(1.15);
+  transition:opacity .6s linear, background 1s ease;
+}
+/* Winieta — delikatne przyciemnienie krawędzi ekranu */
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%, transparent 55%, hsl(var(--bg-h) var(--bg-s) calc(var(--bg-l) - 3%) / .55) 100%);
+  transition:background .9s ease;
+}
+html[data-theme="light"] body::after{
+  background:radial-gradient(120% 90% at 50% 0%, transparent 60%, hsl(228 40% 88% / .5) 100%);
+}
+::selection{background:hsl(var(--accent-h) 70% 50% / .35)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:760px;margin:0 auto;padding:28px 20px 60px}
+
+/* ====== Nagłówek / pasek stanu ====== */
+header.top{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin-bottom:18px;flex-wrap:wrap;
+}
+.brand{font-family:"Fraunces",serif;font-weight:600;font-size:1.55rem;letter-spacing:-.01em}
+.brand em{font-style:italic;color:var(--accent);transition:color .9s ease}
+
+#dashboard{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;
+  margin-bottom:16px;
+}
+.stat{
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:16px;padding:10px 16px;flex:1;min-width:96px;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  box-shadow:var(--edge);
+  transition:border-color .9s ease,background .9s ease,transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.stat:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--edge),var(--shadow-soft)}
+.stat .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft)}
+.stat .val{font-family:"Fraunces",serif;font-size:1.5rem;font-weight:600;line-height:1.1}
+.stat .val small{font-size:.8rem;color:var(--ink-soft);font-family:"Hanken Grotesk"}
+#streak-stat .val{color:var(--accent);transition:color .9s ease}
+#xp-stat .val{color:var(--gold);transition:color .9s ease}
+
+/* ====== Pasek narzędzi ====== */
+.toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none;font-size:.92rem;color:var(--ink-soft)}
+.switch input{display:none}
+.track{
+  width:42px;height:24px;border-radius:999px;background:var(--chip);
+  position:relative;transition:background .25s var(--ease),border-color .25s var(--ease);flex:none;border:1px solid var(--line);
+}
+.track::after{
+  content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+  background:var(--ink-soft);transition:transform .28s var(--ease),background .28s var(--ease);
+  box-shadow:0 2px 6px hsl(230 50% 5% / .35);
+}
+.switch input:checked + .track{background:hsl(var(--accent-h) 55% 42%);border-color:transparent}
+.switch input:checked + .track::after{transform:translateX(18px);background:#fff}
+.switch.on .label-txt{color:var(--ink)}
+
+.btn-reset,.btn-io{
+  background:transparent;border:1px solid var(--line);color:var(--ink-soft);
+  padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.85rem;font-family:inherit;
+  transition:.2s var(--ease);
+}
+.btn-reset:hover{border-color:var(--no-bd);color:var(--no)}
+.btn-io:hover{border-color:var(--accent);color:var(--accent)}
+.btn-mode{
+  background:var(--glass);border:1px solid var(--accent);color:var(--accent);
+  padding:8px 14px;border-radius:11px;cursor:pointer;font-size:.85rem;font-family:inherit;
+  font-weight:600;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  transition:.22s var(--ease);
+}
+.btn-mode:hover{background:var(--accent);color:var(--on-accent);transform:translateY(-1px);
+  box-shadow:0 8px 20px -8px hsl(var(--accent-h) 70% 45% / .5)}
+
+/* ====== Przyciski zakresu (trwały stan wciśnięcia) ====== */
+/* ProAroma — złoty */
+#btn-scope{border-color:var(--gold-bd);color:var(--gold)}
+#btn-scope:hover,#btn-scope.active{background:var(--gold);color:var(--bg);border-color:transparent;
+  box-shadow:0 8px 20px -8px hsl(36 70% 45% / .55)}
+#btn-scope.active:hover{filter:brightness(1.08)}
+/* Leaks — fioletowy */
+#btn-leaks{border-color:hsl(265 50% 62% / .5);color:hsl(265 72% 76%)}
+#btn-leaks:hover,#btn-leaks.active{background:hsl(265 55% 58%);color:#fff;border-color:transparent;
+  box-shadow:0 8px 20px -8px hsl(265 60% 50% / .55)}
+#btn-leaks.active:hover{filter:brightness(1.08)}
+html[data-theme="light"] #btn-leaks{color:hsl(265 55% 50%)}
+
+/* ====== Pasek postępu ====== */
+#progress{height:6px;border-radius:999px;background:var(--field);border:1px solid var(--line);overflow:hidden;margin-bottom:22px}
+#progress > div{height:100%;width:0;border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 12px hsl(var(--accent-h) 70% 55% / .5);
+  transition:width .45s var(--ease),background .9s ease}
+
+/* ====== Karta pytania (mleczne szkło) ====== */
+.card{
+  position:relative;
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:24px;padding:30px 28px;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  box-shadow:var(--edge),var(--shadow-soft),0 0 var(--glow) hsl(var(--accent-h) 80% 55% / .3);
+  transition:border-color .9s ease,box-shadow .9s ease,background .9s ease;
+  animation:rise .55s var(--ease);
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(165deg,hsl(0 0% 100% / .05),transparent 38%);
+}
+html[data-theme="light"] .card::before{background:linear-gradient(165deg,hsl(0 0% 100% / .5),transparent 45%)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+#retry-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bd);
+  padding:5px 12px;border-radius:999px;font-size:.75rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;
+}
+#qnum{font-size:.78rem;color:var(--ink-soft);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+#question{font-family:"Fraunces",serif;font-size:1.42rem;font-weight:500;line-height:1.35;margin:0 0 22px}
+
+/* Opcje */
+.option{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:14px 16px;margin:10px 0;border-radius:14px;
+  border:1px solid var(--line);background:var(--field);
+  cursor:pointer;font-size:1rem;
+  transition:background .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease);
+}
+.option:hover{background:var(--field-hover);border-color:hsl(var(--accent-h) 45% 55% / .45);transform:translateX(4px)}
+.option:active{transform:translateX(4px) scale(.995)}
+.option .key{
+  flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+  background:var(--chip);font-weight:700;font-size:.82rem;color:var(--ink-soft);
+  transition:.2s var(--ease);
+}
+.option:hover .key{background:var(--accent);color:var(--on-accent)}
+.option.correct{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-ink);pointer-events:none}
+.option.correct .key{background:var(--ok);color:var(--bg)}
+.option.wrong{background:var(--no-bg);border-color:var(--no-bd);color:var(--no-ink);pointer-events:none}
+.option.wrong .key{background:var(--no);color:var(--bg)}
+.option.disabled{pointer-events:none;opacity:.55}
+
+/* Pytania sekwencyjne */
+.seq{display:flex;align-items:center;gap:12px;padding:10px 14px;margin:9px 0;border-radius:14px;
+  background:var(--field);border:1px solid var(--line);transition:.25s var(--ease)}
+.seq .ctrl{display:flex;flex-direction:column;gap:4px}
+.seq .ctrl button{width:30px;height:24px;border:none;border-radius:7px;cursor:pointer;
+  background:var(--chip);color:var(--ink);font-size:.8rem;transition:.15s var(--ease)}
+.seq .ctrl button:hover:not(:disabled){background:var(--accent);color:var(--on-accent)}
+.seq .ctrl button:disabled{opacity:.25;cursor:not-allowed}
+.seq .txt{flex:1}
+.seq.ok-seq{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-ink)}
+.seq.no-seq{background:var(--no-bg);border-color:var(--no-bd);color:var(--no-ink)}
+
+.feedback{margin-top:16px;padding:14px 16px;border-radius:14px;font-weight:600}
+.feedback.ok{background:var(--ok-bg);border:1px solid var(--ok-bd);color:var(--ok-ink)}
+.feedback.no{background:var(--no-bg);border:1px solid var(--no-bd);color:var(--no-ink)}
+
+button.primary{
+  margin-top:22px;width:100%;border:none;border-radius:14px;cursor:pointer;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));color:var(--on-accent);
+  padding:15px;font-size:1rem;font-weight:700;font-family:inherit;letter-spacing:.01em;
+  box-shadow:0 10px 26px -12px hsl(var(--accent-h) 70% 45% / .55),inset 0 1px 0 hsl(0 0% 100% / .18);
+  transition:filter .2s,transform .2s var(--ease),box-shadow .25s var(--ease),background .9s ease;
+}
+button.primary:hover{filter:brightness(1.1);transform:translateY(-1px);
+  box-shadow:0 14px 30px -12px hsl(var(--accent-h) 70% 45% / .65),inset 0 1px 0 hsl(0 0% 100% / .18)}
+button.primary:active{transform:translateY(0) scale(.99)}
+.kbd{background:hsl(0 0% 100% / .18);border-radius:6px;padding:1px 7px;font-size:.8em;font-family:monospace}
+
+.hints{text-align:center;color:var(--ink-soft);font-size:.8rem;margin-top:18px;
+  border-top:1px solid var(--line);padding-top:14px}
+.hints .kbd{background:var(--chip)}
+
+.hidden{display:none !important}
+
+/* Dyskretna sygnatura — widoczna po przyjrzeniu się, ale nierzucająca się w oczy */
+.credit{
+  margin-top:40px;text-align:center;
+  font-size:.72rem;letter-spacing:.08em;
+  color:var(--ink-soft);opacity:.45;
+  transition:opacity .2s ease;user-select:none;
+}
+.credit:hover{opacity:.8}
+
+/* Podsumowanie */
+#summary h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.8rem;margin:0 0 6px}
+.score-big{font-family:"Fraunces",serif;font-size:3.2rem;font-weight:600;line-height:1;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.err{background:var(--field);border:1px solid var(--line);border-left:3px solid var(--no);
+  padding:18px 20px;border-radius:12px;margin:16px 0}
+.err .q{font-family:"Fraunces",serif;font-size:1.2rem;font-weight:500;margin-bottom:12px;line-height:1.4}
+.err .opts{font-size:.95rem;color:var(--ink-soft);margin-bottom:16px;line-height:1.6}
+.err .opts b{color:var(--ink)}
+.err .a-bad{color:var(--no-ink);background:var(--no-bg);border:1px solid var(--no-bd);padding:9px 12px;border-radius:8px;margin-bottom:8px;font-size:.95rem}
+.err .a-good{color:var(--ok-ink);background:var(--ok-bg);border:1px solid var(--ok-bd);padding:9px 12px;border-radius:8px;font-size:.95rem}
+
+/* ====== Poprawka: nazwa poziomu nie wychodzi poza ramkę ====== */
+#xp-stat{flex:1.4;min-width:138px}
+#xp-stat .val{font-size:1.15rem;line-height:1.2}
+#xp-stat .val #lvl-name{overflow-wrap:anywhere}
+#xp-stat .val small{font-size:.7rem}
+
+/* ====== Przycisk „Nie znam odpowiedzi" ====== */
+button.ghost{
+  margin-top:14px;width:100%;cursor:pointer;font-family:inherit;
+  background:transparent;border:1px dashed var(--line-strong);color:var(--ink-soft);
+  padding:13px;font-size:.92rem;font-weight:600;border-radius:12px;transition:.2s var(--ease);
+}
+button.ghost:hover{border-color:var(--no-bd);color:var(--no);background:var(--no-bg)}
+
+/* ====== Nagroda — losowy kot (NAGLE się pojawia, wolniej znika) ====== */
+#cat-overlay{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;pointer-events:none}
+.cat-pop{
+  max-width:min(70vw,460px);max-height:60vh;width:auto;height:auto;
+  border-radius:16px;                                   /* delikatnie zaokrąglone rogi */
+  box-shadow:0 24px 70px -12px rgba(0,0,0,.65),0 0 0 4px rgba(255,255,255,.07);
+  animation:catPop 2.4s cubic-bezier(.2,.7,.2,1) forwards;
+  will-change:transform,opacity;
+}
+@keyframes catPop{
+  0%   {opacity:0;transform:scale(.3)}   /* BUM — */
+  5%   {opacity:1;transform:scale(1.12)} /* — nagłe pojawienie z lekkim przeskalowaniem */
+  12%  {opacity:1;transform:scale(1)}
+  50%  {opacity:1;transform:scale(1)}    /* chwila widoczności */
+  100% {opacity:0;transform:scale(.96)}  /* wolniejsze zniknięcie */
+}
+
+/* ====== Celebracja — deszcz kotów po ukończeniu całej bazy ====== */
+#cat-rain{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden}
+.cat-drop{
+  position:absolute;top:-12vh;will-change:transform,opacity;user-select:none;
+  animation-name:catRain;animation-timing-function:cubic-bezier(.45,.12,.7,1);animation-fill-mode:forwards;
+}
+@keyframes catRain{
+  0%   {transform:translate(0,-12vh) rotate(0);opacity:0}
+  8%   {opacity:1}
+  90%  {opacity:1}
+  100% {transform:translate(var(--drift,0),116vh) rotate(var(--spin,360deg));opacity:.9}
+}
+#completion-banner{
+  margin:0 0 16px;padding:14px 16px;border-radius:14px;text-align:center;
+  font-weight:700;font-size:1.05rem;
+  background:var(--ok-bg);border:1px solid var(--ok-bd);color:var(--ok-ink);
+  animation:rise .5s var(--ease);
+}
+
+/* ====== „Co nowego?" — dyskretny przycisk + pływające okienko ====== */
+.whatsnew-wrap{text-align:center;margin-top:6px}
+.whatsnew-btn{
+  background:none;border:none;cursor:pointer;font-family:inherit;
+  font-size:.72rem;letter-spacing:.08em;color:var(--ink-soft);
+  opacity:.45;transition:opacity .2s ease,color .2s ease;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.whatsnew-btn:hover{opacity:.9;color:var(--accent)}
+
+.wn-overlay{
+  position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:20px;
+  background:hsl(var(--bg-h) 50% 3% / .5);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  animation:wnFade .25s ease;
+}
+html[data-theme="light"] .wn-overlay{background:hsl(228 40% 30% / .25)}
+.wn-modal{
+  position:relative;max-width:430px;width:100%;max-height:82vh;overflow:auto;
+  background:var(--glass-strong);
+  border:1px solid var(--line-strong);border-radius:20px;padding:24px 24px 18px;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  box-shadow:var(--edge),var(--shadow-pop);
+  animation:wnRise .3s var(--ease);
+}
+.wn-modal h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.45rem;margin:0 0 4px;padding-right:44px}
+.wn-modal .wn-ver{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);margin-bottom:12px}
+.wn-close{
+  position:absolute;top:8px;right:8px;width:40px;height:40px;
+  display:grid;place-items:center;background:none;border:none;cursor:pointer;
+  color:var(--ink-soft);font-size:1.6rem;line-height:1;border-radius:10px;transition:.2s;
+}
+.wn-close:hover{color:var(--ink);background:var(--field-hover)}
+.wn-list{list-style:none;margin:0;padding:0}
+.wn-list li{padding:11px 0;border-top:1px solid var(--line);font-size:.93rem;line-height:1.55;color:var(--ink-soft)}
+.wn-list li:first-child{border-top:none}
+.wn-list b{color:var(--ink)}
+.wn-list .wn-em{color:var(--accent);font-weight:600}
+@keyframes wnFade{from{opacity:0}to{opacity:1}}
+@keyframes wnRise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+
+/* ====== Nagłówek karty: numer + akcje (wstecz / ulubione) ====== */
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.qhead #qnum{margin-bottom:0}
+.qhead-actions{display:flex;gap:8px;align-items:center;flex:none}
+.qbtn{background:transparent;border:1px solid var(--line);color:var(--ink-soft);
+  padding:5px 11px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:.8rem;transition:.2s var(--ease);line-height:1}
+.qbtn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+#fav-btn{font-size:1.05rem;padding:4px 10px}
+#fav-btn.active,#fav-btn.active:hover{color:var(--gold);border-color:var(--gold-bd)}
+
+/* ====== Stan przeglądania odpowiedzi (po cofnięciu) ====== */
+#options.review .option{cursor:pointer}
+#options.review .option.correct,#options.review .option.wrong{pointer-events:auto}
+.option.dim{opacity:.5}
+.option.dim:hover{opacity:.85}
+.review-hint{margin-top:14px;font-size:.82rem;color:var(--ink-soft);text-align:center;
+  border:1px dashed var(--line-strong);border-radius:10px;padding:10px 12px}
+
+/* ====== Wyjaśnienie poprawnej odpowiedzi (po udzieleniu odpowiedzi) ====== */
+.explain{
+  margin-top:16px;padding:15px 18px;border-radius:14px;
+  background:var(--field);border:1px solid var(--line);border-left:3px solid var(--accent);
+  font-size:.96rem;line-height:1.6;color:var(--ink);
+  animation:rise .4s var(--ease);
+}
+.explain-h{
+  display:flex;align-items:center;gap:7px;margin-bottom:7px;
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);
+}
+.explain.none{border-left-color:var(--line-strong)}
+.explain.none .explain-body{color:var(--ink-soft);font-style:italic}
+
+/* ====== Tryb fiszek ====== */
+.flash-hint{
+  margin:4px 0 14px;padding:18px 16px;border-radius:13px;text-align:center;
+  border:1px dashed var(--line-strong);color:var(--ink-soft);font-size:.95rem;
+}
+.flash-answer{margin-top:0}
+.flash-rate{display:flex;gap:12px;margin-top:16px}
+.flash-btn{
+  flex:1;padding:14px;border-radius:13px;cursor:pointer;font-family:inherit;
+  font-weight:700;font-size:.98rem;border:1px solid var(--line);transition:.2s var(--ease);
+}
+.flash-btn.yes{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-ink)}
+.flash-btn.yes:hover{background:var(--ok);color:var(--bg);transform:translateY(-1px)}
+.flash-btn.no{background:var(--no-bg);border-color:var(--no-bd);color:var(--no-ink)}
+.flash-btn.no:hover{background:var(--no);color:var(--bg);transform:translateY(-1px)}
+
+/* ====== Aktywny tryb nauki w menu + licznik słabych punktów ====== */
+.menu-item.active{color:var(--accent)}
+.menu-item.active .mi-ic{color:var(--accent)}
+.mi-count{margin-left:auto;font-size:.7rem;font-weight:700;background:var(--accent);color:var(--on-accent);
+  border-radius:999px;padding:1px 7px;min-width:18px;text-align:center;line-height:1.6}
+
+/* ====== Modal przeglądania / ulubionych ====== */
+.browse-modal{
+  position:relative;max-width:680px;width:100%;max-height:86vh;display:flex;flex-direction:column;
+  background:var(--glass-strong);
+  border:1px solid var(--line-strong);border-radius:20px;padding:22px 22px 16px;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  box-shadow:var(--edge),var(--shadow-pop);
+  animation:wnRise .3s var(--ease);
+}
+.browse-modal h3{font-family:"Fraunces",serif;font-weight:600;font-size:1.45rem;margin:0 0 12px;padding-right:44px}
+.browse-tabs{display:flex;gap:8px;margin-bottom:12px}
+.browse-tab{flex:1;background:var(--field);border:1px solid var(--line);
+  color:var(--ink-soft);padding:9px 12px;border-radius:10px;cursor:pointer;font-family:inherit;
+  font-size:.9rem;font-weight:600;transition:.2s var(--ease)}
+.browse-tab:hover{color:var(--ink);border-color:var(--line-strong)}
+.browse-tab.active{background:var(--accent);border-color:transparent;color:var(--on-accent)}
+.browse-search{width:100%;background:var(--field);border:1px solid var(--line);
+  color:var(--ink);padding:10px 14px;border-radius:10px;font-family:inherit;font-size:.95rem;margin-bottom:10px;
+  transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.browse-search:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px hsl(var(--accent-h) 70% 55% / .18)}
+.browse-search::placeholder{color:var(--ink-soft)}
+.browse-count{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:10px}
+.browse-list{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px;padding-right:4px}
+.browse-list::-webkit-scrollbar,.wn-modal::-webkit-scrollbar{width:8px}
+.browse-list::-webkit-scrollbar-thumb,.wn-modal::-webkit-scrollbar-thumb{background:var(--chip);border-radius:99px}
+.browse-empty{color:var(--ink-soft);text-align:center;padding:34px 12px;font-size:.95rem;line-height:1.6}
+.browse-q{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.browse-q-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.browse-q-id{font-size:.74rem;letter-spacing:.08em;color:var(--ink-soft);text-transform:uppercase}
+.browse-fav{background:transparent;border:1px solid var(--line);color:var(--ink-soft);
+  width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:1.05rem;line-height:1;transition:.2s var(--ease);flex:none}
+.browse-fav:hover{border-color:var(--gold-bd);color:var(--gold)}
+.browse-fav.active{color:var(--gold);border-color:var(--gold-bd)}
+.browse-q-text{font-family:"Fraunces",serif;font-size:1.06rem;font-weight:500;line-height:1.35;margin-bottom:10px}
+.browse-opts{display:flex;flex-direction:column;gap:6px}
+.browse-opt{font-size:.92rem;color:var(--ink-soft);padding:7px 11px;border-radius:8px;
+  background:var(--chip);border:1px solid transparent;line-height:1.4}
+.browse-opt b{color:var(--ink)}
+.browse-opt.correct{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-ink)}
+.browse-opt.correct b{color:var(--ok-ink)}
+
+/* ====== Kompaktowy pasek narzędzi + menu „⚙" ====== */
+.tool-cluster{display:inline-flex;align-items:center;gap:8px;margin-left:auto}
+.tool-icon{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  height:40px;min-width:40px;padding:0 11px;
+  background:var(--glass);border:1px solid var(--line);color:var(--ink-soft);
+  border-radius:12px;cursor:pointer;font-family:inherit;font-size:1.05rem;line-height:1;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  transition:.2s var(--ease);
+}
+.tool-icon:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.tool-badge{font-size:.7rem;font-weight:700;background:var(--accent);color:var(--on-accent);
+  border-radius:999px;padding:1px 6px;min-width:17px;text-align:center;line-height:1.5}
+.menu-wrap{position:relative;display:inline-flex}
+.menu-pop{
+  position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:min(280px,86vw);
+  background:var(--glass-strong);
+  border:1px solid var(--line-strong);border-radius:16px;padding:8px;
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  box-shadow:var(--edge),var(--shadow-pop);
+  animation:wnRise .2s var(--ease);
+  display:flex;flex-direction:column;
+}
+.menu-section{font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);padding:9px 12px 4px}
+.menu-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  background:transparent;border:none;color:var(--ink);
+  padding:11px 12px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:.92rem;transition:.15s var(--ease)}
+.menu-item .mi-ic{width:18px;text-align:center;flex:none;color:var(--ink-soft)}
+.menu-item:hover{background:var(--field-hover)}
+.menu-item.danger:hover{background:var(--no-bg);color:var(--no)}
+.menu-item.danger:hover .mi-ic{color:var(--no)}
+.menu-divider{height:1px;background:var(--line);margin:6px 6px}
+.menu-pop .switch{display:flex;align-items:center;width:100%;gap:10px;
+  padding:11px 12px;border-radius:9px;color:var(--ink);font-size:.92rem}
+.menu-pop .switch:hover{background:var(--field-hover)}
+.menu-pop .switch .label-txt{order:-1;margin-right:auto;color:var(--ink)}
+
+/* ====== Dostępność: ograniczone animacje ====== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <!-- KONFIG: NAZWA-STRONY — tekst nagłówka jest nadpisywany przez stałe BRAND_NAME i BRAND_SUFFIX_* na początku sekcji <script> (to tylko wartości zapasowe) -->
+    <div class="brand"><span id="brand-name">Podstawy pielęgniarstwa</span> <em id="brand-em">— zestaw ćwiczeń</em></div>
+  </header>
+
+  <div id="dashboard">
+    <div class="stat" id="xp-stat"><div class="label">Poziom</div><div class="val"><span id="lvl-name">Obserwator</span> <small id="lvl-xp">0/20</small></div></div>
+    <div class="stat"><div class="label">Pytanie</div><div class="val"><span id="cur">1</span><small> / <span id="tot">0</span></small></div></div>
+    <div class="stat"><div class="label">Wynik</div><div class="val" id="score">0</div></div>
+    <div class="stat" id="streak-stat"><div class="label">Seria</div><div class="val"><span id="streak">0</span><small> / <span id="streak-max">0</span> rekord</small></div></div>
+    <div class="stat" id="mastery-stat"><div class="label">Opanowane</div><div class="val"><span id="mastered-count">0</span><small> / <span id="bank-size">180</span></small></div></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-mode" id="btn-mode" onclick="toggleMode()">🎓 Tryb testu</button>
+    <button class="btn-mode" id="btn-scope" onclick="toggleScope()" title="Tylko pytania dr Ackermann (112–149)">🧪 ProAroma</button>
+    <button class="btn-mode" id="btn-leaks" onclick="toggleLeaks()" title="Tylko pytania z zakresu Leaks (150–188)">📜 Leaks</button>
+    <div class="tool-cluster">
+      <button class="tool-icon" id="browse-open-btn" onclick="openBrowse('all')" title="Przeglądaj wszystkie pytania (bez odpowiadania)" aria-label="Przeglądaj pytania">📖</button>
+      <button class="tool-icon" id="fav-open-btn" onclick="openBrowse('fav')" title="Twoje ulubione pytania" aria-label="Ulubione pytania">★<span id="fav-count" class="tool-badge hidden">0</span></button>
+      <div class="menu-wrap">
+        <button class="tool-icon" id="menu-btn" onclick="toggleMenu()" title="Menu i ustawienia" aria-haspopup="true" aria-expanded="false" aria-label="Menu">⚙</button>
+        <div class="menu-pop hidden" id="menu-pop" role="menu">
+          <div class="menu-section">Tryby nauki</div>
+          <button class="menu-item" id="mi-weak" role="menuitem" onclick="closeMenu(); enterWeakMode()" title="Ćwicz tylko pytania jeszcze nieopanowane"><span class="mi-ic">🎯</span><span>Słabe punkty</span><span id="mi-weak-count" class="mi-count hidden">0</span></button>
+          <button class="menu-item" id="mi-flash" role="menuitem" onclick="closeMenu(); enterFlashMode()" title="Najpierw przypomnij sobie odpowiedź, potem ją odsłoń"><span class="mi-ic">🔄</span><span>Tryb fiszek</span></button>
+          <div class="menu-divider"></div>
+          <div class="menu-section">Ustawienia</div>
+          <label class="switch" id="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="track"></span>
+            <span class="label-txt">Tryb jasny</span>
+          </label>
+          <label class="switch" id="shuffle-switch">
+            <input type="checkbox" id="shuffle-toggle">
+            <span class="track"></span>
+            <span class="label-txt">Tasowanie pytań</span>
+          </label>
+          <label class="switch" id="sound-switch">
+            <input type="checkbox" id="sound-toggle" checked>
+            <span class="track"></span>
+            <span class="label-txt">Dźwięk</span>
+          </label>
+          <div class="menu-divider"></div>
+          <div class="menu-section">Postęp</div>
+          <button class="menu-item" role="menuitem" onclick="closeMenu(); exportProgress()"><span class="mi-ic">⭳</span><span>Eksport postępu</span></button>
+          <button class="menu-item" role="menuitem" onclick="closeMenu(); document.getElementById('import-file').click()"><span class="mi-ic">⭱</span><span>Import postępu</span></button>
+          <button class="menu-item danger" role="menuitem" onclick="closeMenu(); resetSession()"><span class="mi-ic">↺</span><span>Reset sesji</span></button>
+        </div>
+      </div>
+    </div>
+    <input type="file" id="import-file" accept="application/json,.json" class="hidden">
+  </div>
+
+  <div id="progress"><div></div></div>
+
+  <div class="card" id="quiz">
+    <div id="retry-badge" class="hidden">⟳ Powtórka — wcześniej błędna</div>
+    <div class="qhead">
+      <div id="qnum">Pytanie 1</div>
+      <div class="qhead-actions">
+        <button id="back" class="qbtn hidden" type="button" title="Wróć do poprzedniego pytania">← Wstecz</button>
+        <button id="fav-btn" class="qbtn" type="button" title="Dodaj do ulubionych">☆</button>
+      </div>
+    </div>
+    <h2 id="question" style="font-family:'Fraunces',serif;font-weight:500;font-size:1.42rem;line-height:1.35;margin:0 0 22px">Ładowanie…</h2>
+    <div id="options"></div>
+    <button id="dontknow" class="ghost hidden" onclick="giveUp()">Nie znam odpowiedzi</button>
+    <button id="next" class="primary hidden">Następne pytanie <span class="kbd">Enter</span></button>
+    <div class="hints">Klawisze: wybór <span class="kbd">A</span>–<span class="kbd">F</span> · zatwierdź / dalej <span class="kbd">Enter</span> · wstecz <span class="kbd">←</span></div>
+  </div>
+
+  <div class="card hidden" id="summary">
+    <!-- KONFIG: LICZBA-PYTAN — baner po ukończeniu zestawu; liczba pytań jest teraz wstawiana automatycznie w finish() (ten tekst to tylko wartość zapasowa) -->
+    <div id="completion-banner" class="hidden">🐱 Gratulacje! Ukończono wszystkie pytania! 🎉</div>
+    <h2>Podsumowanie</h2>
+    <p style="color:var(--ink-soft);margin-top:0">Wynik z pierwszej próby</p>
+    <div class="score-big"><span id="fscore">0</span> / <span id="ftot">0</span></div>
+    <p style="font-size:1.1rem;margin-top:8px"><span id="fpct">0</span>% poprawnych odpowiedzi</p>
+    <div id="errs" class="hidden">
+      <h3 style="color:var(--no);border-bottom:1px solid var(--line);padding-bottom:8px;margin-top:28px">Szczegółowa analiza błędów</h3>
+      <div id="errlist"></div>
+    </div>
+    <button class="primary" onclick="restart()">Rozwiąż ponownie ten sam zestaw</button>
+  </div>
+
+  <!-- KONFIG: WERSJA — numer wersji aplikacji widoczny w stopce -->
+  <footer class="credit">Maciej Skiba | v1.10.0</footer>
+  <div class="whatsnew-wrap">
+    <button class="whatsnew-btn" onclick="openWhatsNew()">Co nowego?</button>
+  </div>
+
+</div>
+
+<div id="whatsnew-overlay" class="wn-overlay hidden" onclick="if(event.target===this) closeWhatsNew()">
+  <div class="wn-modal" role="dialog" aria-modal="true" aria-labelledby="wn-title">
+    <button class="wn-close" onclick="closeWhatsNew()" aria-label="Zamknij">×</button>
+    <h3 id="wn-title">Co nowego?</h3>
+    <div class="wn-ver">Najnowsze zmiany</div>
+    <!-- KONFIG: CO-NOWEGO — lista zmian w okienku „Co nowego?" (najnowsze na górze) -->
+    <ul class="wn-list">
+      <li><b>Pytania</b> Dodano część <span class="wn-em">pierwszą</span> pytań.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="browse-overlay" class="wn-overlay hidden" onclick="if(event.target===this) closeBrowse()">
+  <div class="browse-modal" role="dialog" aria-modal="true" aria-labelledby="browse-title">
+    <button class="wn-close" onclick="closeBrowse()" aria-label="Zamknij">×</button>
+    <h3 id="browse-title">Przeglądaj pytania</h3>
+    <div class="browse-tabs">
+      <button id="tab-all" class="browse-tab active" type="button" onclick="setBrowseTab('all')">Wszystkie</button>
+      <button id="tab-fav" class="browse-tab" type="button" onclick="setBrowseTab('fav')">★ Ulubione (0)</button>
+    </div>
+    <input id="browse-search" class="browse-search" type="search" placeholder="Szukaj w treści pytań i odpowiedzi…" oninput="renderBrowseList()">
+    <div id="browse-count" class="browse-count"></div>
+    <div id="browse-list" class="browse-list"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   KONFIG: USTAWIENIA SZABLONU
+   ------------------------------------------------------------
+   Wszystkie miejsca do edycji przy adaptacji strony do innego
+   przedmiotu znajdziesz, szukając (Ctrl+F) frazy "KONFIG:".
+   Pełna lista haseł — w pliku SZABLON-INSTRUKCJA.md obok.
+   ============================================================ */
+
+/* KONFIG: NAZWA-STRONY — tytuł widoczny na zakładce przeglądarki */
+const PAGE_TITLE = 'Podstawy pielęgniarstwa';
+
+/* KONFIG: NAZWA-STRONY — nagłówek w lewym górnym rogu strony.
+   BRAND_NAME to zwykły tekst, a dopisek (pochylony, podświetlony
+   kolorem akcentu) zmienia się zależnie od trybu nauka/test. */
+const BRAND_NAME = 'Podstawy pielęgniarstwa';
+const BRAND_SUFFIX_LEARN = '— giełda';      // dopisek w trybie nauki
+const BRAND_SUFFIX_TEST  = '— Test (40 pytań)'; // dopisek w trybie testu (liczba pytań: szukaj "KONFIG: TEST")
+const BRAND_SUFFIX_WEAK  = '— Słabe punkty';        // dopisek w trybie powtórki słabych pytań
+const BRAND_SUFFIX_FLASH = '— Fiszki';              // dopisek w trybie fiszek
+
+document.title = PAGE_TITLE;
+document.getElementById('brand-name').textContent = BRAND_NAME;
+
+/* ============================================================
+   KONFIG: MOTYW — domyślny motyw strony ('dark' = ciemny, 'light' = jasny).
+   Użytkownik może go zmienić przełącznikiem „Tryb jasny" w menu ⚙;
+   wybór zapisuje się w localStorage i ma pierwszeństwo przed domyślnym.
+   ============================================================ */
+const DEFAULT_THEME = 'dark';
+const THEME_KEY = 'procesyPozn_v1_theme';
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  try{ localStorage.setItem(THEME_KEY, t); }catch(e){}
+  const tg = document.getElementById('theme-toggle');
+  if(tg){
+    tg.checked = (t === 'light');
+    const sw = document.getElementById('theme-switch');
+    if(sw) sw.classList.toggle('on', t === 'light');
+  }
+}
+(function initTheme(){
+  let t = DEFAULT_THEME;
+  try{ const s = localStorage.getItem(THEME_KEY); if(s === 'light' || s === 'dark') t = s; }catch(e){}
+  setTheme(t);
+})();
+document.getElementById('theme-toggle').addEventListener('change', e=>{
+  setTheme(e.target.checked ? 'light' : 'dark');
+});
+
+/* ============================================================
+   KONFIG: BAZA-PYTAN — treść pytań quizu.
+   Format: "(numer) treść pytania", a pod spodem opcje "a) ...".
+   Pytania sekwencyjne (układanie kolejności) mają w kluczu
+   odpowiedzi kilka liter po przecinku, np. (19)-c,d,a,e,b.
+   ============================================================ */
+const questionsText = `
+(1) Po nakłuciu lędźwiowym pacjenta należy:
+a) Przetransportować na salę w pozycji leżącej a następnie ułożyć w łóżku w pozycji półwysokiej na ok. 2h.
+b) Przetransportować na salę w pozycji siedzącej a następnie ułożyć w łóżku w pozycji półwysokiej na ok. 2h.
+c) Przetransportować na salę w pozycji leżącej a następnie ułożyć w łóżku na płasko na ok. 12h.
+d) Przetransportować na salę w pozycji siedzącej a następnie ułożyć w łóżku na płasko na ok. 12h.
+(2) Częsta kontrola parametrów życiowych pacjenta po nakłuciach opłucnej lub otrzewnej jest konieczna w celu szybkiego wykrycia:
+a) Zakażenia
+b) Wstrząsu hipowolemicznego
+c) Zespołu popunkcyjnego
+d) Stanu zapalnego
+(3) Nakłucie lędźwiowe nie wykonuje się w przestrzeni podpajęczynówkowej między:
+a) L2 – L3
+b) L3 – L4
+c) L4 – L5
+d) L5 – S1
+(4) W celu prowokacji mikcji można zastosować różne bodźce:
+a) Słuchowe
+b) Psychiczne
+c) Termiczne
+d) Wszystkie wyżej wymienione
+(5) Do niebezpieczeństw (powikłań) cewnikowania pęcherza moczowego należą:
+a) Zaleganie moczu po mikcji
+b) Zadzierzgnięcie napletka nie odprowadzonego poza żołądź prącia
+c) Niedrożność cewki moczowej
+d) Nietrzymanie moczu
+(6) Nieprawdziwą zasadą obowiązującą podczas cewnikowania pęcherza moczowego jest:
+a) Zastosowanie cewnika najcieńszego z możliwych
+b) Nieupuszczanie jednorazowo więcej niż 600-800 ml moczu
+c) Stałe obserwowanie drożności cewnika
+d) Przeprowadzenie drenu odprowadzającego mocz ponad udem pacjenta
+(7) Powikłania, które mogą wystąpić podczas zakładania i karmienia za pomocą zgłębnika żołądkowego mogą być:
+a) Metaboliczne
+b) Septyczne
+c) Mechaniczne
+d) Wszystkie ww. wymienione
+(8) Podczas karmienia pacjenta przy pomocy zgłębnika żołądkowego częstym powikłaniem jest wysychanie błony śluzowej jamy ustnej. Jakie czynności wykonasz lub polecisz pacjentowi by nie doszło do takich powikłań
+a) Założenie zgłębnika przez nos
+b) Przepłukiwanie zgłębnika po każdym posiłku 100 ml wody
+c) Częsta toaleta jamy ustnej i żucie gumy bądź cukierka po każdym posiłku
+d) Regularne rozluźnianie zgłębnika
+(9) Przeciwwskazaniem do wykonania wlewu doodbytniczego jest:
+a) Zabieg operacyjny
+b) Niewyjaśnione bóle brzucha
+c) Przygotowanie kobiety do porodu
+d) rektoskopia
+(10) Która z pozycji ułożeniowych stosowana do wykonania wlewu doodbytniczego jest pozycją dającą najlepszy efekt wlewu przeczyszczającego:
+a) Na lewym boku
+b) Na prawym boku
+c) Na plecach
+d) Siedzącej z ugiętymi kolana
+(11) Ćwiczenia oddechowe mają wpływ:
+a) Relaksacyjny
+b) Zapobiegawczy
+c) Leczniczy
+d) Wszystkie ww. odpowiedzi są prawidłowe
+(12) Drugi etap procesu pielęgnowania zawiera następujące fazy:
+a) ustalenie celu, dobór metod, formułowanie planu
+b) gromadzenie i analiza danych, ustalenie diagnozy
+c) sprawdzenie gotowości pacjenta i pielęgniarki, realizacja planu.
+d) analiza danych i ustaleniu działań
+(13) Sprawdzenie gotowości pacjenta do podjęcia zaplanowanych działań jest elementem której fazy i którego etapu w procesie pielęgnowania?
+a) II faza III etapu
+b) I faza III etapu
+c) III faza II etapu
+d) I faza II etapu
+(14) Deficyt samoopieki wg D. Orem jest to różnica jakościowa i ilościowa pomiędzy:
+a) systemem opieki pielęgniarskiej a działaniami pacjenta
+b) terapeutycznymi wymogami samoopieki a działaniami samoopiekuńczymi pacjenta
+c) potrzebami uniwersalnymi a potrzebami wynikającymi z zaburzeń w stanie zdrowia
+d) działaniami pielęgniarki a działaniami pacjenta.
+(15) Analiza deficytu samoopieki dokonywana jest poprzez ocenę trzech grup potrzeb w ujęciu D. Orem. Należą do nich.
+a) potrzeby biologiczne, psychiczne i społeczne
+b) potrzeby socjokulturowe, duchowe i rozwojowe
+c) potrzeby uniwersalne, rozwojowe, uwarunkowane stanem zdrowia
+d) potrzeby fizyczne, socjokulturowe, rozwojowe
+(16) W klasyfikacji teorii pielęgniarstwa teoria C. Roy określana jest jako:
+a) Teoria interakcjonizmu
+b) Teoria pola energetycznego
+c) Teoria transkulturowa
+d) Teoria systemowa – adaptacyjna
+(17) Obowiązująca definicja pielęgniarstwa przyjęta przez WHO została sformułowana przez:
+a) Fl. Nightingale
+b) PTP
+c) V. Henderson
+d) J. Wotson
+(18) Międzynarodowy Dzień Pielęgniarki – jest obchodzony 12 maja w rocznicę:
+a) utworzenia pierwszej szkoły pielęgniarskiej
+b) utworzenia ICN – Międzynarodowej Rady Pielęgniarek
+c) urodzin Fl. Nightingal
+d) urodzin M. Rogers
+(19) Teoria Fl Nightingal została zakwalifikowana do teorii:
+a) Analizujących ludzkie potrzeby
+b) Środowiskowych
+c) Systemowych
+d) Relacji międzyludzkich
+(20) Zdrowie w ujęciu holistycznym rozumiane jest jako;
+a) dobrostan bio-psycho-fizyczny
+b) brak choroby
+c) zjawisko wielowymiarowe, dynamiczne nie dające się ostro odgraniczyć od choroby
+d) możliwość dobrego funkcjonowania w jak najdłuższym okresie życia.
+(21) Błędy popełniane przez pielęgniarkę w fazie wnioskowania mające prowadzić do postawienia diagnozy pielęgniarskiej mogą dotyczyć np:
+a) błędy obserwacji, wywiadu i pomiaru
+b) fałszywej przyczyny, błąd atrybucji, schematyzm
+c) błędy wynikające z braku wiedzy
+d) nieznajomość norm
+(22) Do podstawowych cech obserwacji należy zaliczyć:
+a) celowość, obiektywność, selektywność (i systematyczność)
+b) subiektywizm, ciągłość
+c) ciągłość, kreatywność, rzetelność
+d) systematyczność, etapowość, dynamiczność
+(23) Ryzyko powstania odleżyn oceniamy skalami
+a) ADL, Barthel, Mini MAC
+b) Torancea, Bobath, HAD
+c) CBO, Braden, Waterloo
+d) IADL, Torancea, IZZ
+(24) Obserwacje i gromadzenie danych zgodnie z zasadą OLD CART dotyczą:
+a) czynników łagodzących, czynników zaostrzających, czasu trwania objawów
+b) subiektywnej oceny problemów pacjenta
+c) Obiektywnej oceny problemów pacjenta
+d) analizy i oceny uzyskanych informacji
+(25) Organizacja zajmująca się Międzynarodową Klasyfikacją Praktyki Pielęgniarskiej to:
+a) PTP - Polskie Towarzystwo Pielęgniarskie
+b) NANDA - North American Nursing Diagnosis Association
+c) WHO - World Health Organization
+d) ICN - International Council of Nursees
+(26) Sformułowanie: Trudności z kaniulacją żył obwodowych spowodowane obrzękiem kończyn – to:
+a) problem pacjenta
+b) problem pielęgniarki
+c) interwencja
+d) diagnoza pielęgniarska
+(27) Ustawa powołująca Samorząd Pielęgniarek i Położnych pochodzi z roku:
+a) 1995
+b) 1991
+c) 1996
+d) 1980
+(28) Do podstawowych cech charakteryzujących pielęgniarstwo jako profesję należą:
+a) Wykonywanie czynności zawodowych wyuczonych w trakcie nauki zawodu, praca pod nadzorem
+b) Świadczenie wyspecjalizowanych usług, ustalona teoria będąca podstawą ustalania kompetencji i norm, autonomia praktyki.
+c) Wykonywanie czynności społecznie użytecznych wyodrębnionych na wskutek podziału pracy będących źródłem utrzymania i prestiżu społecznego
+d) Świadczenie specjalistycznych usług na zlecenie i pod kontrolą innej grupy zawodowej
+(29) Podstawowymi cechami procesu pielęgnowania są:
+a) dynamika i elastyczność
+b) apowość, uniwersalność i logiczność
+c) całościowość, planowość
+d) realizm i celowość
+(30) U pacjenta w okolicy kości krętarza pojawiło się - nieblednące zaczerwienienie, z uszkodzeniem mikrokrążenia, powierzchowne uszkodzenie naskórka i ból. Wymienione objawy świadczą o powstałej odleżynie. Według skali Torrancea – który to stopień:
+a) I stopień
+b) II stopień
+c) III stopień
+d) IV stopień
+(31) BLS to działania dotyczące:
+a) badań lekarskich skriningowych
+b) podstawowych zabiegów resuscytacyjnych - basic life support
+c) biopsji laparoskopowych
+d) biopsji i aspiracji szpiku.
+(32) V. A. Henderson uważa, że pielęgniarka powinna pełnić w stosunku do osób których otacza profesjonalną opieką następujące role
+a) nauczyciela, pomocnika, zastępcy
+b) zastępcy, pomocnika, asystenta
+c) środka zastępczego, partnera, pomocnika
+d) konsultanta, zastępcy, źródła informacji
+(33) Diagnoza społeczności lokalnej skupia się głównie na:
+a) skutkach zagrożeń zdrowotnych w populacji
+b) warunków społecznych mających znaczenie dla indywidualnego pacjenta
+c) relacjach podopiecznego z środowiskiem
+d) klasyfikowaniu czynników ryzyka
+(34) W diagnozie znaczeniowej wyróżniamy dwa podejścia: obiektywne i subiektywne. Podejście subiektywne dotyczy:
+a) analizy znaczenia jakie ma dany czynnik dla procesu zdrowienia
+b) analizy znaczenia, jakie ma dany objaw dla charakterystyki stanu
+c) reakcji chorego na przebieg danego procesu zdrowienia czy rehabilitacji
+d) odczuć pacjenta, jakie ma znaczenie dla niego konkretny stan
+(35) Kontrola diurezy z powodu działania leków moczopędnych. Przedstawione sformułowanie to:
+a) diagnoza pielęgniarska
+b) cel opieki
+c) interwencja pielęgniarska
+d) diagnoza lekarska
+(36) Północnoamerykańskie Towarzystwo zajmujące się diagnozami w pielęgniarstwie to:
+a) ANA - American Nurses Association
+b) NANDA - North American Nursing Diagnosis Association
+c) ICNP - International Council of Nursees
+d) NOC - Nursing Outcomes Classification
+(37) Uwarunkowania, które pielęgniarka zawsze bierze pod uwagę planując indywidualną opiekę nad pacjentem dotyczą:
+a) adaptacji do zmian w funkcji organizmu
+b) Fizjologiczne mechanizmy kompensacyjne
+c) wiek, temperament, stan socjalny, rozwój fizyczny i intelektualny
+d) ja fizyczne, ja idealne, ja realne, ja moralne
+(38) Do podstawowych metod zbierania i gromadzenia danych o pacjencie zaliczamy:
+a) metody ankietowe, kwestionariuszowe
+b) obserwacja, wywiad, analiza dokumentów, pomiar
+c) indywidualna, grupowa, społeczności lokalnej
+d) obiektywne i subiektywne
+(39) Na konieczność obserwacji emocji towarzyszących pacjentowi w trakcie relacji terapeutycznych wskazuje w swojej teorii:
+a) C. Roy
+b) Fl. Nightingale
+c) H. Peplau
+d) N. Roper
+(40) Do czynności pielęgniarki mających na celu pomóc pacjentowi w odksztuszaniu wydzieliny zalegającej w drogach oddechowych należy:
+a) ułożenie pacjenta w pozycji płaskiej i podanie tlenu
+b) ułożenie pacjenta w pozycji półsiedzącej i podanie tlenu
+c) dość silne i szybkie oklepywanie pleców pacjenta
+d) delikatne masowanie pleców pacjenta
+(41) Chłopiec lat 10 uderzył się o konar drzewa, na kończynie dolnej w okolicy podudzia pojawił się odczyn podbarwiony krwią z obrzękiem i silnym bólem. Aby zadziałać: przeciwkrwotocznie, przeciwobrzękowo i przeciwbólowo – jaki zastosujesz kompres.
+a) kompres żelowy ciepły
+b) kompres żelowy schłodzony
+c) kompres wysychający
+d) Kompres rozgrzewający
+(42) Zimny kompres na okolice serca ma działanie:
+a) Przyspiesza pracę serca
+b) Wywołuje przekrwienie i łagodzi stan zapalny
+c) Uspakaja i zwalnia czynność serca
+d) Zwiększa OCŻ
+(43) Pacjent z dusznością powinien (wskaż prawidłową odpowiedź):
+a) wyeliminować wszelką aktywność,
+b) zaprzestać palenia papierosów,
+c) ograniczyć picie płynów,
+d) wyeliminować z pożywienia sól kuchenną.
+(44) U pacjenta z obrzękami, leczonego lekami moczopędnymi pielęgniarka powinna kontrolować (wskaż prawidłową odpowiedź):
+a) ilość wydalanego moczu,
+b) poziom elektrolitów w surowicy krwi,
+c) zabarwienie powłok skórnych,
+d) wilgotność skóry.
+(45) Zastosowanie u chorego gorączkującego worka z lodem na okolicę pachwinową na okres 0,5 godziny ma na celu:
+a) jmiejscowe zmniejszenie przemiany materii,
+b) schłodzenie,
+c) obniżenie temperatury ciała,
+d) wszystkie odpowiedzi są prawidłowe.
+(46) Po dezynfekcji skóry przed iniekcją należy:
+a) natychmiast wkłuć igłę w tkankę
+b) odczekać 5 sekund
+c) odczekać minimum 30 sekund
+d) nie ma znaczenia
+(47) Ilość leku podawana podskórnie nie powinna przekraczać:
+a) 2ml
+b) 5ml
+c) 7ml
+d) 10 ml
+(48) Podskórnie można podawać:
+a) roztwór wodny
+b) roztwór oleisty
+c) roztwór koloidowy
+d) zawiesinę
+(49) Roztwory wodne do wstrzyknięć można łączyć wyjątkowo z:
+a) z lekami oleistymi
+b) z metalami ciężkimi
+c) z lekami wodnymi
+d) z emulsjami tłuszczowymi
+(50) Najbardziej niebezpieczną sferą wstrzyknięcia domięśniowego w okolicę pośladkową tylną jest trójkąt zawarty między:
+a) kolcem biodrowym przednim górnym, kolcem biodrowym tylnym dolnym a kością guziczną
+b) kolcem biodrowym tylnym górnym, kolcem kulszowym a kością guziczną
+c) kolcem biodrowym tylnym górnym, guzem kulszowym a krętarzem większym kości udowej
+d) kolcem biodrowym przednim górnym, kością guziczną a krętarzem mniejszym kości udowej
+(51) Śródskórnie wstrzykuje się:
+a) 0,01 ml leku
+b) 0,1 ml leku
+c) 1,0 ml leku
+d) 0,001 ml leku
+(52) Miejscem założenia wkłucia podskórnego igłą typu Butterfly jest:
+a) okolica szyi
+b) górna część klatki piersiowej poniżej obojczyka
+c) okolica przedramienia
+d) nad wyniosłością kostną
+(53) Przy planowanym długotrwałym leczeniu dożylnym - w pierwszej kolejności należy nakłuwać żyły w obrębie:
+a) zgięcia łokciowego
+b) nadgarstka
+c) grzbietu ręki
+d) nie ma znaczenia
+(54) Odczyn Biernackiego, to zjawisko:
+a) skupiania i opadania osocza
+b) opadania osocza na dno rurki
+c) niszczenie krwinek pod wpływem cytrynianu sodu
+d) szybkość opadania krwinek w jednostce czasu
+(55) OB ulega przyspieszeniu w przypadku:
+a) ciężkiej żółtaczki
+b) niewydolności krążenia
+c) wstrząsu anafilaktycznego
+d) w ostrych chorobach reumatycznych
+(56) Wstrzyknięcie śródskórne wykonuje się pod kątem:
+a) 90°
+b) 10-15°
+c) 45°
+d) 25-30°
+(57) Drogą dożylną można podać:
+a) penicylinę prokainową
+b) testarpen
+c) roztwór wodny
+d) roztwór olejowy
+(58) Biorąc pod zwiększone ryzyko występowania zakrzepicy żylnej w trakcie terapii dożylnej unikamy nakłucia żył obwodowych w okolicach:
+a) głowy
+b) stopy
+c) szyi
+d) przedramienia
+(59) Wydostawanie się leku poza obręb żyły objawia się:
+a) zapaścią układu żylnego
+b) przyspieszonym tętnem
+c) sinicą okolicy
+d) piekącym bólem
+(60) Pacjenta z dusznością spoczynkową układamy w pozycji:
+a) wysokiej, z dobrym podparciem głowy
+b) płaskiej, z podkurczonymi nogami
+c) bezpiecznej, na boku
+d) na brzuchu, na miękkim podłożu
+(61) Pielęgniarka podczas dyżuru w oddziale szpitalnym podając leki doustne choremu:
+a) podaje bezpośrednio choremu do przyjęcia
+b) zostawia choremu na szafce przyłóżkowej
+c) prosi aby chory przyjął leki dopiero w czasie posiłku
+d) prosi aby chory przyjął leki wtedy gdy będzie źle się czuł
+(62) Tlenoterapia w warunkach hospitalizacji może być stosowana u chorego
+a) według decyzji pielęgniarki
+b) na zlecenie lekarza
+c) na prośbę chorego
+d) na prośbę rodziny chorego
+(63) Nanoszenie środków leczniczych na śluzówkę jamy ustnej:
+a) następuje po toalecie całego ciała
+b) rozpoczyna toaletę jamy ustnej
+c) następuje po toalecie jamy ustnej
+d) następuje przed posiłkiem
+(64) Mycie higieniczne rąk ma na celu:
+a) zniszczyć florę bakteryjną przejściową i stałą
+b) usunąć i zabić florę bakteryjną przejściową
+c) usunąć substancje organiczne
+d) usunąć florę bakteryjną stałą
+(65) BMI=26 wskazuje na:
+a) nadwagę
+b) otyłość I stopnia
+c) otyłość II stopnia
+d) optymalną masę ciała
+(66) Tętno u pacjentów z zaburzeniami rytmu serca mierzy się:
+a) przez 1 minutę
+b) przez 15 sekund a wynik mnoży przez 4
+c) przez 30 sekund a wynik mnoży przez 2
+d) przez 30 sekund
+(67) Amplituda skurczowo-rozkurczowa w czasie badania ciśnienia tętniczego krwi powinna wynosić:
+a) 10 mmHg
+b) 130 mmHg
+c) 30-50mmHg
+d) 90 mmHg
+(68) Oddech Kussmaula charakteryzuje się:
+a) bardzo głębokimi, regularnymi oddechami z krótkimi okresami bezdechu
+b) unoszeniem się klatki piersiowej podczas wydechu
+c) krótkotrwałym zatrzymaniem oddechu - Biota
+d) coraz głębszymi, a następnie coraz płytszymi oddechami - Cheyne’a Stokesa
+(69) Liczbę oddechów mierzy się:
+a) przez 1 minutę
+b) przez 15 sekund a wynik mnoży przez 4
+c) przez 30 sekund a wynik mnoży przez 2
+d) przez 30 sekund
+(70) W ułożeniu pacjenta na plecach w celu zmniejszenia napięcia mięśni wypełnia się udogodnieniami przestrzenie:
+a) między szóstym kręgiem szyjnym a pierwszym piersiowym oraz wygięciem lędźwiowym
+b) w okolicy krzyżowo-lędźwiowej
+c) pod kolanami i pod udami
+d) pod potylicą i łopatkami
+(71) Liczba uderzeń tętna ulega przyspieszeniu przy wzroście temperatury:
+a) na każdy stopień Celsjusza od 10-20 uderzeń/min.
+b) na każde 0,3 stopnia Celsjusza o 10 uderzeń/min.
+c) na każde 0,5 stopnia Celsjusza o 10 uderzeń/min.
+d) na każde 0,1 stopnia Celsjusza o 10 uderzeń/min.
+(72) Przy podłączeniu każdej porcji krwi lub preparatu krwiopochodnego musi być obecny:
+a) Lekarz
+b) Pielęgniarka
+c) Lekarz i pielęgniarka
+d) Pracownik laboratorium lub Pracownik RCKiK
+(73) Pozycji Trendelenburga nie zastosujesz u pacjenta
+a) z zaleganiem wydzieliny w płacie dolnym segmentu podstawowego tylnego
+b) z obrzękiem kończyny dolnej lewej
+c) z nadciśnieniem tętniczym
+d) z żylakami odbytu
+(74) Metoda wyznaczania miejsca wstrzyknięcia domięśniowego wg von Hochstettera dotyczy mięśnia:
+a) pośladkowego wielkiego
+b) pośladkowego średniego
+c) czworogłowego uda
+d) naramiennego
+(75) Zespół Hoignè charakteryzujący się m.in. zaburzeniami wzroku, słuchu, splataniem, pobudzeniem, lękiem z uczuciem zagrożenia życia jest powikłaniem:
+a) przetoczenia niezgodnej grupowo krwi
+b) wstrzyknięcia domięśniowego
+c) zapalenia żyły poddanej kaniulacji
+d) wprowadzenia zakażenia do rany
+(76) U pacjenta zlecono DZM – dobową zbiórkę moczu – zbiórkę moczu do specjalnego naczynia rozpoczniemy od:
+a) od ostatniej wieczornej porcji moczu
+b) od porannej porcji moczu
+c) od pierwszej porcji moczu oddanej przez pacjenta
+d) po oddaniu pierwszej porcji moczu do toalety
+(77) Temperatura ciała w granicach 37,1 – 38,0 °C to:
+a) temperatura subnormalna - poniżej 36,0°C
+b) stan podgorączkowy
+c) gorączka umiarkowana - 38,1°C - 39,0°C
+d) temperatura krytyczna
+(78) Dominującym ogniwem mechanizmu termoregulacji jest ośrodek termoregulacji znajdujący się:
+a) w układzie nerwowym w komorze mózgu
+b) w układzie nerwowym w podwzgórzu
+c) w rdzeniu kręgowym
+d) w prawym przedsionku serca
+(79) Przed przetoczeniem pacjentowi krwi należy pobrać krew na badania:
+a) morfologię, próbę krzyżową,
+b) próbę biologiczną,
+c) próbę krzyżową, czas krwawienia i krzepnięcia,
+d) próbę krzyżową, grupę krwi i czynnik Rh.
+(80) Celem leczniczym cewnikowania pęcherza moczowego jest:
+a) odprowadzenie zalegającego moczu przy utrudnionym odpływie z pęcherza moczowego,
+b) wykonanie wziernikowania do pęcherza moczowego,
+c) założenie cewnika, aby zapobiec powstawaniu odparzeniom i odleżynom u chorych bezwiednie oddających mocz,
+d) pobranie moczu na badanie ogólne.
+(81) Który z poniższych składowych moczu jest prawidłowy i świadczy o zdrowiu;
+a) barwa jasnożółta, ph7, mocz lekko mętny, białko +, leukocyty +, glukoza-
+b) barwa ciemnożółta, ph 12, przeźroczysty, białko -, ślad erytrocytów, glukoza-
+c) barwa jasnożółta, ph 6, przeźroczysty, białko -, ketony-, glukoza-
+d) barwa żółta, ph 10, erytrocyty +, bilirubina+
+(82) Aseptyką nazywamy:
+a) niedopuszczenie do zakażenia bądź zanieczyszczenia drobnoustrojami rany u pacjenta
+b) niedopuszczenie do zakażenia bądź zanieczyszczenia materiału , narzędzi i sprzętu
+c) posługiwanie się przez pielęgniarki narzędziami wyjałowionymi
+d) niedopuszczenie do zakażenia bądź zanieczyszczenia drobnoustrojami rany, miejsca, sprzętu, materiału i narzędzi.
+(83) Antyseptyka ma na celu:
+a) doprowadzenie do stanu całkowitej jałowości w obrębie określonej części ciała
+b) całkowite wyeliminowanie przeniesienia do ustroju czynników chorobotwórczych z zewnątrz organizmu
+c) doprowadzenie do stanu względnej jałowości w obrębie określonej części ciała lub w zakażonej ranie
+d) doprowadzenie do stanu całkowitej jałowości w obrębie zakażonej rany.
+(84) Masz do podania 300 mg Pyralginy w iniekcji domięśniowej. Pyralgina jest w ampułkach o pojemności 5ml w której znajduje się 500 mg leku. Ile ml leku podasz.
+a) 2ml
+b) 5 ml
+c) 3 ml
+d) 7 ml
+(85) Podaj 800 mg Ketonalu i.m. jeśli wiesz, że: 1 ampułka zawiera 100 mg w 2ml.
+a) 4 ml
+b) 10 ml
+c) 3 ml
+d) 9 ml
+(86) Natrium Chloratum 0,9% to:
+a) Płyn infuzyjny - koloid
+b) Płyn infuzyjny – krystaloid
+c) Płyn hipertoniczny
+d) Płyn elektrolitowy
+(87) Pośród wymienionych niżej patologii, powikłaniem związanym z zakładaniem i karmieniem przez zgłębnik nie jest:
+a) Stan zapalny jamy nosowej, gardła i uszu
+b) Brak odruchu gardłowego i odruchu połykania - to przeciwwskazanie
+c) Odleżyna w jamie nosowej, gardle, przełyku
+d) Pękanie błony śluzowej jamy nosowej, ustnej i gardła
+(88) Spośród wymienionych czynności chirurgicznego mycia i dezynfekcji rąk, stwierdzeniem nieprawdziwym jest, że należy:
+a) Nanieść na dłonie 2 ml płynnego mydła i myć ręce aż do zgięcia łokciowego
+b) Nanieść na dłonie lub szczotkę 1 ml płynnego mydła i wyczyścić nią paznokcie
+c) Spłukać ręce gorącą wodą aż do pozbycia się mydlin a następnie osuszyć ręce
+d) Sześciokrotnie nanieść alkoholowy środek antyseptyczny i wcierać go w skórę rąk
+(89) W odżywianiu pacjenta z odleżynami bardzo istotne jest odżywianie, jaką dietę zastosujesz:
+a) bogatą w błonnik
+b) niskopotasową
+c) wysokobiałkową
+d) niskosodową
+(90) Zakażenie wewnątrzszpitalne to:
+a) takie, które nastąpiło w szpitalu
+b) takie, które zostało spowodowane przez czynnik chorobotwórczy pochodzący od innego chorego, pracowników szpitala lub przez endogenny czynnik mikrobiologiczny
+c) takie, które zostało spowodowane przez czynnik chorobotwórczy pochodzący od innego chorego
+d) takie, które nastąpiło po opuszczeniu szpitala przez pacjenta
+(91) Do zakażeń szpitalnych zalicza się;
+a) zakażenie samoinfekcyjne lub autoinfekcyjne oraz zakażenie egzogenne
+b) zakażenie endogenne
+c) takie zakażenia, kiedy podczas pobytu pacjenta w szpitalu pojawiają się objawy tego zakażenia
+d) zakażenie, z którym pacjent zostaje skierowany do szpitala
+(92) Dezynfekcją nazywa się:
+a) proces inaktywacji mikroorganizmów pochodzący od personelu szpitalnego
+b) zapobieganie niszczenia zakażeń poprzez mycie sprzętu medycznego
+c) proces inaktywacji mikroorganizmów znajdujący się na nieożywionych powierzchniach w celu zapobiegania wystąpienia zakażeń
+d) proces niszczenia drobnoustrojów pochodzących od innych chorych
+(93) Wybierz zdanie prawdziwe- higieniczne mycie rąk polega na:
+a) dezynfekcji rąk
+b) myciu i dezynfekcji rąk według metody Ayliffe
+c) mycie rąk pod bieżącą wodą o temp. 50 0 C
+d) myciu i dezynfekcji rąk przed oraz po zakończonym dyżurze
+(94) Wstrzyknięcia podskórne wykonuje się pod kątem:
+a) 45 0 C, 60 0 C, 90 0C
+b) 60 0 C, 90 0C, 950 C
+c) 45 0 C, 60 0 C, 30 0C
+d) 30 0C, 60 0 C, 15 0 C
+(95) Jednym z groźnych niebezpieczeństw (zagrażających życiu pacjenta) przy wstrzyknięciu śródskórnym może być:
+a) wprowadzenie infekcji
+b) złe podanie leku
+c) zafałszowanie wyniku testu
+d) wstrząs anafilaktyczny
+(96) Po podaniu insuliny drogą s.c. igłę usuwa się z tkanek:
+a) po podaniu leku
+b) po 2 s
+c) po 10 s
+d) po 30 s
+(97) Jak należy postąpić, gdy chory, któremu masz podać lek jest nieobecny na sali:
+a) zostawić choremu leki do przyjęcia później
+b) zgłosić ten fakt lekarzowi
+c) zgłosić pielęgniarce oddziałowej
+d) schować leki do szafki aptecznej i podać je choremu później
+(98) Inhalacje, to podaż leków drogą wziewną do układu oddechowego na poziomie
+a) krtani
+b) tchawicy
+c) oskrzeli
+d) wszystkie odpowiedzi są prawidłowe
+(99) Udogodnienia stosowane dla chorego długotrwale leżącego zapobiegają
+a) odleżynom, przykurczom, obrzękom kończyn
+b) odleżynom, odparzeniom, zapaleniu płuc
+c) odleżynom, zanikom mięśni, zapaleniu oskrzeli
+d) odleżynom, zanikom mięśni, infekcjom
+(100) Wskaż, który rodzaj materaca przeciwodleżynowego jest najbardziej wskazany dla chorego długotrwale leżącego
+a) statyczny
+b) silikonowy
+c) zmiennociśnieniowy
+d) gąbka typu „jeżyk”
+(101) Zmiana pozycji ułożeniowej u chorego nieprzytomnego powinna być wykonywana
+a) w zależności od potrzeby
+b) na zlecenie lekarza
+c) 4 razy dzienne
+d) co 2 godziny
+(102) Toaletę całego ciała u chorego leżącego wykonuje się w następującej kolejności:
+a) mycie: zębów, twarzy, szyi, kończyn górnych, brzucha, klatki piersiowej, pleców, pośladków, kończyn dolnych oraz podmywanie
+b) mycie: zębów, twarzy, szyi, kończyn górnych , klatki piersiowej, brzucha, pleców, pośladków, kończyn dolnych oraz podmywanie
+c) mycie: zębów, twarzy, szyi, kończyn górnych , klatki piersiowej, brzucha, pośladków, pleców, kończyn dolnych oraz podmywanie
+d) mycie: zębów, twarzy, szyi, klatki piersiowej, brzucha, kończyn górnych, pleców, pośladków, kończyn dolnych oraz podmywanie
+(103) W karcie gorączkowej przy wykreślaniu krzywej temperatury ciała pacjenta jedna pozioma ,,kreska” odpowiada:
+a) 0,2 stopnia Celsjusza
+b) 0,5 stopnia Celsjusza
+c) 2 stopniom Celsjusza
+d) 1 stopniowi Celsjusza
+(104) Bezpośrednio przed przygotowaniem pacjenta do badania ciśnienia tętniczego i tętna należy sprawdzić czy:
+a) palił przed chwilą papierosy
+b) jest pod wpływem silnych emocji
+c) wykonał intensywny wysiłek fizyczny
+d) wszystkie odpowiedzi są prawidłowe
+(105) Hipotonia wyrażona jest wartościami RR:
+a) poniżej 120/80 mmHg
+b) powyżej 140/90 mmHg
+c) w granicach 130/85 mmHg
+d) między 120-/80 mmHg a 140/90 mmHg
+(106) Oddech paradoksalny charakteryzuje się tym, że:
+a) klatka piersiowa unosi się w czasie wydechu
+b) klatka piersiowa unosi się w czasie wdechu
+c) ma zapach acetonu
+d) ma zapach zgnilizny
+(107) Resuscytację u dorosłego prowadzimy według następującego schematu
+a) 15 uciśnięć mostka i 1 wdech
+b) 15 uciśnięć mostka i 2 wdechy
+c) 30 uciśnięć mostka i 2 wdechy
+d) 30 uciśnięć mostka i 1 wdech
+(108) Koncentrat Krwinek Czerwonych należy podłączyć do przetoczenia w ciągu:
+a) 30 min
+b) 40 min
+c) 50 min
+d) 60 min
+(109) Osocze należy przetoczyć maksymalnie w ciągu:
+a) 0.5 h
+b) 1 h
+c) 1.5 h
+d) 2 h
+(110) Wartości OCŻ nie zależą od:
+a) ciśnienia tętniczego krwi
+b) ilości krwi krążącej
+c) ciśnienia wewnątrzczaszkowego
+d) ciśnienia w klatce piersiowej
+(111) Po wykonaniu transfuzji krwi pojemnik i aparat po przetoczeniu z resztkami krwi przechowuje się w lodowce przez:
+a) 120 h
+b) 96 h
+c) 72 h
+d) 48h
+(112) Jedną z podstawowych zasad postępowania podczas wykonywania iniekcji jest aspiracja. Które z wymienionych leków przy podaniu drogą podskórną lub domięśniową nie wymagają aspiracji
+a) leki oleiste
+b) emulsje tłuszczowe
+c) heparyny
+d) penicylina procainowa
+(113) Nakłucie tętnicy dokonuje się najczęściej w celu:
+a) Szybkiego nawodnienia
+b) Pobrania krwi do badania gazometrycznego
+c) Wykonania spirometrii
+d) wykonania testu Alena
+(114) Częsta kontrola parametrów życiowych pacjenta po nakłuciu opłucnej lub otrzewnej jest konieczna w celu szybkiego wykrycia:
+a) zakażenia
+b) wstrząsu hipowolemicznego
+c) zespołu popunkcyjnego
+d) stanu zapalnego
+(115) Podczas jakiego zabiegu wymagane jest założenie jałowych rękawiczek
+a) Iniekcji domięśniowych
+b) Założenie zgłębnika do żołądka
+c) Zdjęcia szwów
+d) Załażenia cewnika do pęcherza moczowego
+(116) Jakie aktualne wyniki badań powinien posiadać pacjent przed zabiegiem aspiracji i biopsji szpiku
+a) OB i poziom leukocytów
+b) morfologia, czasy krwawienia i krzepnięcia
+c) jonogram i CRP
+d) HCV, HBV
+(117) Prawidłowa wartość glukozy na czczo u osoby zdrowej wynosi
+a) 40-60mg%
+b) 70-120mg%
+c) 60-100mg%
+d) 100-120mg%
+(118) Do określenia natężenia bólu stosujemy skalę:
+a) Likerta
+b) Bradena
+c) VAS
+d) Lovetato
+(119) Wskazaniem do intubacji jest:
+a) znieczulenie przewodowe
+b) konieczność mechanicznej wentylacji
+c) gastroskopia
+d) uporczywe wymioty II.
+(120) Do działań zapobiegających niebezpieczeństwom cewnikowania pęcherza moczowego należą:
+a) monitorowanie diurezy i stopnia nawodnienia organizmu
+b) podawanie do pęcherza moczowego leków
+c) opróżnianie pęcherza moczowego w przypadku retencji moczu
+d) codzienne pielęgnowanie cewnika i systemu drenującego
+(121) Prawidłowa kolejność czynności w celu wprowadzenia cewnika :
+a) założenie jałowych rękawiczek, zalanie gazików płynem antyseptycznym, umycie gazikami okolic cewki moczowej, wprowadzenie cewnika do cewki
+b) rękawiczki, umycie gazikami okolic cewki, zalanie gazików płynem, wprowadzenie cewnika
+c) zalanie gazików, rękawiczki, umycie gazikami okolic cewki, wprowadzenie cewnika
+d) zalanie gazików, umycie gazikami okolic cewki, rękawiczki, wprowadzenie cewnika
+(122) Przeciwskazaniem do badania ogólnego moczu są:
+a) ostre i przewlekłe zatrucia
+b) stany zapalne nerek i dróg moczowych
+c) stany zapalne i ropne okolic ujścia cewki moczowej
+d) ostre i przewlekłe zaburzenia metaboliczne
+(123) 75% odleżyn powstaje w okolicy:
+a) Potylicy, małżowiny usznej
+b) Krętarza, kostek, pięt
+c) Łopatek, kolan, łokci
+(124) Uszkodzenie pełnej grubości skóry z tkanką łączną. Brzegi rany ograniczone, obrzęki tkanki podskórnej. Dno rany wypełnione czerwoną ziarniną. Odleżynę o takich cechach zakwalifikujesz zgodnie ze skalą Torrancea do:
+a) I stopnia
+b) II stopnia
+c) III stopnia
+d) IV stopnia
+(125) Które z niżej wymienionych działań zastosujesz w leczeniu wyżej wymienionej odleżyny:
+a) Przemywanie odleżyny 0,9 % NaCl i założenie opatrunku z błony poliuretanowej
+b) Przemywanie odleżyny 0,9 % roztworem soli fizjologicznej, założenie maści antybiotykowej i suchego jałowego opatrunku
+c) Przemycie odleżyny 0,9 % NaCl i założenie opatrunku hydrokoloidalnego
+d) Zgłosić potrzebę interwencji chirurgicznej
+(126) W przypadku gdy u chorego z odleżyną III stopnia wystąpi podwyższona temp. Ciała, przyspieszone tętno i wzrost ciśnienia, jakie podejmujesz działania:
+a) Zanotujesz parametry w dokumentacji, podasz delikatne środki zmniejszające temperaturę, dokonasz zmiany opatrunku na odleżynie
+b) Wezwiesz lekarza, zastosujesz na zlecenie antybiotykoterapię, pobierzesz krew na posiew
+c) Schłodzisz ciało pacjenta zimnymi okładami i po 30 min dokonasz ponownych pomiarów parametrów
+(127) Jeżeli chory ma kilka odleżyn o różnym stopniu, zmianę opatrunku i oczyszczenie zaczynasz od:
+a) Odleżyny ziarninującej
+b) Odleżyny martwiczej
+c) Odleżyny ropnej
+d) Odleżyny najczystszej
+(128) W odżywianiu pacjenta z odleżynami stosujesz dietę:
+a) Bogatą w błonnik
+b) Niskopotasową
+c) Wysokobiałkową
+d) Niskosodową
+(129) Brak odruchu kaszlu, który występuje u chorych nieprzytomnych prowadzi do:
+a) wysuszenia śluzówek i grzybicy układu
+b) zalegania wydzieliny i wystąpienia zapalenia płuc
+c) odwodnienia organizmu i wystąpienia zaburzeń rytmu serca
+(130) Cechy charakterystyczne wydzieliny śluzowej:
+a) zażółcona, mało lepka, zakaźna
+b) lekko zaróżowiona, z dodatkiem pęcherzyków powietrza, niezakaźna
+c) bezbarwna, lepka, niezakaźna ?
+(131) Po podaniu leku we wstrzyknięciu śródskórnym powinien powstać pęcherzyk o średnicy około:
+a) 0,3 cm
+b) 0,2 cm
+c) 0,4 cm
+d) 0,5 cm ?
+(132) Jedynym z groźnych niebezpieczeństw (zagrażających życiu) przy wstrzyknięciu śródskórnym może być:
+a) Wprowadzenie infekcji
+b) Złe podanie leku
+c) Zafałszowanie wyniku testu
+d) Wstrząs anafilaktyczny
+(133) Skala Glasgow służy do oceny:
+a) Odleżyn
+b) Upadków - skala Tinetti
+c) Śpiączki
+d) Percepcji
+(134) Pojemniki po przetaczaniu krwi wraz z zestawem należy przechowywać w temp. 2-6 oC przez:
+a) 48-72 godziny
+b) 24 godziny
+c) 7 dni
+d) 5 dni
+(135) Insulinę należy wstrzykiwać:
+a) Natychmiast po wyjęciu z chłodziarki
+b) Odczekać 5 min po wyjęciu z chłodziarki
+c) Insuliny w fiolce nie należy przechowywać w chłodziarce
+d) Odczekać ok. 15 min po wyjęciu z chłodziarki, gdyż natychmiastowe podanie insuliny z chłodziarki może spowodować dodatkowo ból u pacjenta
+(136) Insulinę podajemy zawsze:
+a) 30 min przed posiłkiem
+b) Podanie zależy od jej czasu działania
+c) 5-15 min przed posiłkami
+d) Ok. 20 min przed każdym posiłkiem
+(137) W fiolce o pojemności 10 ml znajduje się 1000 j.m. insuliny. Pacjent ma otrzymać 30 j.m. Ile ml leku nabierzesz do 2 ml strzykawki?
+a) 0,3 ml
+b) 0,5 ml
+c) 0,4 ml
+d) 0,8 ml
+(138) Podaj 300 mg Pyralginum i.m. jeśli wiesz, że: 1 ampułka Pyralginum 10% w 5 ml
+a) 2 ml
+b) 5 ml
+c) 3 ml
+d) 7 ml
+(139) Podaj 75 mg Ketonalu i.m. jeśli wiesz, że: 1 ampułka zawiera 100 mg w 2ml
+a) 0,5 ml
+b) 1 ml
+c) 1,5 ml
+d) 2 ml
+(140) Temp. wody do kąpieli niemowląt powinna wynosić:
+a) 18 oC
+b) 20 oC
+c) 25 oC
+d) 37 oC
+(141) W czasie kąpieli noworodka nie należy zamaczać kikuta pępowinowego ponieważ:
+a) Wydłuża to proces mumifikacji pępowiny
+b) Jest to ryzyko infekcji organizmu dziecka
+c) Obie odpowiedzi są prawidłowe ?
+d) Żadna odpowiedź nie jest prawidłowa
+(142) Pacjent po urazie kręgosłupa układany jest w pozycji:
+a) Trendelenburga na twardym podłożu
+b) Na boku, z podkurczonymi nogami
+c) Na brzuchu, z podwyższoną głową
+d) Płasko na plecach na twardym podłożu
+(143) Podaj jak należy postąpić, gdy chory nie zgadza się na przyjęcie leków doustnych:
+a) Zostawić choremu leki do przyjęcia później
+b) Zgłosić to lekarzowi
+c) Zgłosić pielęgniarce oddziałowej
+d) Podać leki w innej postaci
+(144) Które z wymienionych funkcji przypisuje pielęgniarce WHO
+a) asystenta lekarza, partnera,
+b) edukatora, opiekuna, osoby zarządzającej
+c) personelu pomocniczego w opiece zdrowotnej
+(145) Pielęgniarka powinna wypełniać zawodowe role w oparciu o:
+a) przydzielone przez zwierzchników funkcje
+b) zlecenia lekarskie
+c) proces pielęgnowania
+d) zadania wyznaczone przez pielęgniarkę oddziałową
+(146) Proces pielęgnowania obowiązujący w polskiej praktyce składa się z:
+a) VI etapów
+b) III etapów
+c) IV etapów
+d) V faz
+(147) Pierwszy etap procesu pielęgnowania zawiera następujące fazy:
+a) ustalenie celu, dobór metod, formułowanie planu - II etap
+b) gromadzenie i analiza danych, ustalenie diagnozy
+c) sprawdzenie gotowości pacjenta i pielęgniarki, realizacja planu - III etap
+d) Analizy danych i ustaleniu działań - ?
+(148) Trzeci etap procesu pielęgnowania zawiera następujące fazy:
+a) sprawdzenie gotowości pacjenta i pielęgniarki, realizacja planu.
+b) ustalenie celu, dobór metod, formułowanie planu - II etap
+c) gromadzenie i analiza danych, ustalenie diagnozy - I etap
+d) Analizy danych i ustaleniu działań - ?
+(149) Które z wymienionych grup cech są istotne w formułowaniu celu opieki
+a) logiczność, dynamika, mierzalność
+b) realizm, określenie w czasie, zrozumiałość
+c) elastyczny, istotny dla opieki
+d) uniwersalny, zaakceptowany
+(150) Plan opieki powinien zawierać
+a) wszystkie czynności opiekuńcze zaplanowane i realizowane przez pielęgniarkę
+b) wszystkie czynności wykonywane przez pielęgniarki w tym i zlecenia lekarskie
+c) skoordynowane działania zespołu terapeutycznego
+d) zlecenia lekarskie
+(151) Ocena w procesie pielęgnowania powinna być dokonana :
+a) przez indywidualne pielęgniarki według ich własnego układu odniesienia
+b) na życzenie władz instytucji opiekuńczej przez pielęgniarki koordynujące
+c) systematycznie, zespołowo, indywidualnie i przez osoby sporządzające plan opieki
+d) przez pielęgniarkę oddziałową
+(152) Pod pojęciem diagnozy pielęgniarskiej rozumiemy
+a) ocenę i hierarchizację potrzeb bio-psycho-społecznych pacjenta/ klienta
+b) ocenę stanu bio-psych-społecznego, zagrożeń oraz możliwości człowieka, rodziny, grupy
+c) ocenę problemów zdrowotnych pacjenta, rodziny i grupy społecznej.
+d) ocenę biologicznych aspektów zdrowia
+(153) Zakres danych niezbędnych pielęgniarce do ustalenia stanu biologicznego pacjenta powinien:
+a) wskazać jak funkcjonują poszczególne układy, by zastosować odpowiednią dalszą diagnostykę specjalistyczną
+b) wskazywać na dysfunkcję układów by zastosować odpowiednią terapię farmaceutyczną
+c) na ile czynności danego narządu zostały zaburzone i jakie ograniczenia wynikają z tego faktu dla pacjenta
+d) zawierać dane podstawowych parametrów do kart obserwacji
+(154) W pielęgniarstwie stosuje się różnego rodzaju diagnozy :
+a) terapeutyczną, rehabilitacyjną, promocyjną
+b) przyczynową, prognostyczną , klasyfikacyjną , fazy , znaczenia
+c) biologiczna, psychiczną i społeczną
+d) indywidualną, przyczynową i do celu hospitalizacji.
+(155) W przypadku zastosowania modelu D. Orem diagnoza pielęgniarska będzie polegała na :
+a) ocenie stopnia zaspokojenia podstawowych potrzeb - V. Henderson
+b) ocenie stopnia oddziaływania bodźców na procesy adaptacyjne - C. Roy
+c) ocenie deficytu samoopieki
+d) ocenie problemów w aspekcie czynności życia codziennego. - N. Roper
+(156) Deficyt samoopieki jest to różnica jakościowa i ilościowa pomiędzy:
+a) systemem opieki pielęgniarskiej a działaniami pacjenta
+b) terapeutycznymi wymogami samoopieki a działaniami samoopiekuńczymi pacjenta
+c) potrzebami uniwersalnymi a potrzebami wynikającymi z zaburzeń w stanie zdrowia
+d) działaniami pielęgniarki a działaniami pacjenta.
+(157) Identyfikacja poszczególnych rodzajów bodźców według C. Roy pozwoli pielęgniarce na zaplanowanie interwencji by pomóc człowiekowi w procesie adaptacyjnym w zakresie następujących wymiarów:
+a) kulturowym, duchowym, egzystencjonalnym
+b) wypełniania ról, koncepcji własnej osoby, współzależności i fizjologicznym
+c) rodzinnym, edukacyjnym, zdrowotnym i społecznym
+d) biologicznym. komunikacyjnym, transkulturowym
+(158) C. Roy wyróżnia trzy rodzaje bodźców mających znaczenie w procesie adaptacyjnym
+a) sytuacyjne, stymulacyjne, poznawcze
+b) regulacyjne, poznawcze, stymulacyjne
+c) kompensacyjne, regulacyjne, ogniskowe
+d) kontekstowe, ogniskowe, resztkowe
+(159) Zmiana roli zawodowej współczesnej pielęgniarki wynika z:
+a) ustawy o zawodzie
+b) przystąpienia polski do UE
+c) zmiany oczekiwań pacjentów oraz definicji zdrowia
+d) oczekiwań organizatorów systemu
+(160) Korzystanie z diagnozy fazy pozwala na:
+a) szybkie określenie efektów działań opiekuńczych
+b) zakwalifikowanie pacjenta do opieki długoterminowej
+c) zaszeregowanie danego stanu do określonej fazy
+d) ocenę subiektywnych odczuć pacjenta
+(161)
+a) potrzeb
+b) systemów
+c) interakcji międzyludzkich
+d) transkulturowych.
+(162) Teorią psychodynamiczną nazywamy teorię :
+a) V. Henderson
+b) N. Roper
+c) B. Neumann
+d) H. Peplau
+(163) Holizm w medycynie oznacza
+a) przedmiotowe traktowanie pacjenta
+b) przekazanie odpowiedzialności za zdrowie na pacjenta
+c) całościowe traktowanie pacjenta w powiązaniu ze środowiskiem
+d) traktowanie choroby jako podstawy do zajęcia się pacjentem.
+(164) Obszary wiedzy które powinna znać pielęgniarka według Fl. Nightingal dotyczą:
+a) patologii,
+b) farmakologii,
+c) zdrowia publicznego
+d) sposobów leczenia
+(165) Która z poniżej wymienionych teoretyków pielęgniarstwa uważała, iż pielęgniarka swoją diagnozę powinna postawić na podstawie analizy 14 podstawowych potrzeb.
+a) Fl Nightingale
+b) D. E. Orem
+c) V Henderson
+d) C. Roy.
+(166) Obserwacje i gromadzenie danych zgodnie z zasadą OLDCART dotyczą:
+a) czynników łagodzących, czynników zaostrzających, czasu trwania objawów
+b) subiektywnej oceny problemów pacjenta
+c) Obiektywnej oceny problemów pacjenta
+d) analizy i oceny uzyskanych informacji
+(167) Zasady funkcjonowania zawodów pielęgniarki i położnej opierają się na Ustawa o Zawodzie Pielęgniarki i Położnej z roku:
+a) 1995
+b) 1996
+c) 1991
+d) 2007
+(168) Do podstawowych cech profesji zaliczyć należy:
+a) ugruntowana wiedza i umiejętności
+b) własna teoria, standardy postępowania, autonomia
+c) wysoki poziom umiejętności i komunikatywność
+d) wysoki prestiż i możliwość przekwalifikowania
+(169) Podstawową cechą procesu pielęgnowania jest:
+a) dynamika i elastyczność
+b) wieloetapowość, uniwersalność i logiczność
+c) całościowość, planowość
+d) fazowość, elastyczność i dynamika
+(170) Przedmiotem oceny jakości opieki pielęgniarskiej w standardach są trzy podstawowe elementy, kryteria:
+a) dostępności, akceptacji, trafności
+b) struktury, procesu, wyniku
+c) właściwości, skuteczności, efektywności
+d) rzetelności, trafności, sprawdzalności.
+(171) H. Peplau w swojej teorii przedstawia 4 fazy relacji interpersonalnej w następującej kolejności;
+a) identyfikacji, orientacji, eksploatacji, rozwiązania
+b) identyfikacji, eksploatacji, orientacji, rozwiązania
+c) rozwiązania problemu, identyfikacji, eksploatacji, orientacji
+d) orientacji, identyfikacji, eksploatacji, rozwiązania.
+(172) V. Henderson wyznacza pielęgniarce następujące role
+a) nauczyciela, pomocnika, zastępcy
+b) zastępcy, pomocnika, asystenta
+c) środka zastępczego, partnera, pomocnika
+d) konsultanta, zastępcy, źródła informacji
+(173) w diagnozie znaczeniowej wyróżniamy dwa podejścia; ejektywne i subiektywne. Podejście subiektywne dotyczy:
+a) analizy znaczenia jakie ma dany czynnik dla procesu zdrowienia
+b) analizy znaczenia, jakie ma dany objaw dla charakterystyki stanu
+c) reakcji chorego na przebieg danego procesu zdrowienia czy rehabilitacji
+d) odczuć pacjenta, jakie ma znaczenie dla niego konkretny stan
+(174) Obszar koncepcji własnej osoby wg C. Roy dotyczy:
+a) adaptacji do zmian w funkcji organizmu
+b) indywidualnych zachowań bio-psycho-społecznych
+c) ja fizycznego, ja idealnego, ja realnego, ja moralnego
+d) sposobów indywidualnego przystosowania osoby
+(175) Organizacja praktyki pielęgniarskiej oparta na założeniu, że od przyjęcia pacjenta do szpitala aż do wypisu jest on pod kontrolą jednej pielęgniarki, nazywany jest:
+a) system pielęgniarski wspierająco – edukacyjny
+b) Primary Nursing
+c) zadaniowy system opieki
+d) system całkowicie kompensacyjny
+(176) W opracowaniu standardów kryteria struktury dotyczą;
+a) zapewnienie bezpieczeństwa, udział w diagnozowaniu, wykonanie zabiegu
+b) system organizacji, przepisy prawne, dokumentowanie
+c) satysfakcja pacjenta, osiągnięcia pacjenta
+d) obserwacja zachowań, stopień osiągnięcia celu
+(177) W opracowaniu standardów kryteria wyniku dotyczą:
+a) zapewnienie bezpieczeństwa, udział w diagnozowaniu, wykonanie zabiegu
+b) system organizacji, przepisy prawne, dokumentowanie
+c) satysfakcja pacjenta, osiągnięcia pacjenta
+d) obserwacja zachowań, stopień osiągnięcia celu
+(178) Do opracowania standardów praktyki w poszczególnych specjalnościach pielęgniarskich służą;
+a) standardy zakładowe
+b) standardy ogólne opracowane dla podsystemu pielęgniarskiego
+c) procedury
+d) algorytmy
+(179) Narastający ból głowy, szczególnie w porze nocnej lub rano, nasilający się podczas oddawania stolca lub moczu, często z powtarzającymi się wymiotami, po których chory czuje się nieco lepiej, świadczy o (wskaż prawidłową odpowiedź):
+a) migrenie,
+b) neuroinfekcji (zapalenie opon mózgowo-rdzeniowych),
+c) wzmożonym ciśnieniu śródczaszkowym,
+d) krwawieniu podpajęczynówkowym.
+(180) Pacjent, u którego wystąpił ból wieńcowy, powinien (wskaż prawidłową odpowiedź):
+a) natychmiast wezwać karetkę pogotowia,
+b) przyjąć nitroglicerynę,
+c) natychmiast zgłosić się do poradni kardiologicznej w celu wykonania EKG,
+d) przyjąć dowolny lek przeciwbólowy.
+(181) Do czynności pielęgniarki mających na celu pomoc pacjentowi w ewakuacji wydzieliny z drzewa oskrzelowego należy (wskaż prawidłową odpowiedź):
+a) podawanie dużej ilości płynów do picia,
+b) zapewnienie prawidłowego mikroklimatu w Sali,
+c) podanie leków przeciwkaszlowych,
+d) podanie tlenu.
+(182) Wobec pacjenta niewidomego postępujesz niewłaściwie, jeżeli (wskaż prawidłową odpowiedź):
+a) pomagasz w utrzymaniu porządku na półce i w szafce pacjenta,
+b) zachwycasz się widokiem kwitnącego kasztanowca,
+c) zachęcasz pacjenta do samodzielnego działania,
+d) umieszczasz chorego na sali z pacjentem, którzy widzą.
+(183) Gorączka, osłabienie, nudności, czkawka, brak łaknienia i duszność są objawami, które (wskaż prawidłową odpowiedź):
+a) świadczą o nieprawidłowym funkcjonowaniem nerek,
+b) towarzyszą dysfunkcji wielu narządów, w tym również układu moczowego,
+c) sugerują nieprawidłowe funkcjonowanie układu pokarmowego.
+(184) Duszność sercowa jest spowodowana (wskaż prawidłową odpowiedź):
+a) niewydolnością mięśnia sercowego,
+b) upośledzeniem drożności dróg oddechowych,
+c) zmniejszeniem pojemności oddechowej płuc,
+d) ograniczeniem ruchomości mięśnia przepony.
+(185) Zastosowanie u chorego gorączkującego worka z lodem na okolice czołową na okres 0,5 godziny ma na celu ( określ odpowiedź):
+a) miejscowe zmniejszenie przemiany materii,
+b) schłodzenie,
+c) obniżenie temperatury ciała,
+d) wszystkie odpowiedzi są prawidłowe.
+(186) Temperatura wody do kąpieli niemowląt powinna wynosić
+a) 18 °C
+b) 20 °C
+c) 25 °C
+d) 37 °C
+(187) Pacjenta po urazie kręgosłupa należy ułożyć w pozycji
+a) Trendelenburga, na twardym podłożu
+b) na boku, z podkurczonymi nogami
+c) na brzuchu, z podwyższoną głową
+d) płasko na plecach, na twardym podłożu
+(188) Pacjenta z dusznością należy ułożyć w pozycji
+a) wysokiej, z podparciem
+b) płaskiej, z podkurczonymi nogami
+c) bezpiecznej, na boku
+d) na brzuchu, na miękkim podłożu
+(189) Krople do oczu należy zakraplać choremu
+a) na powierzchnię rogówki
+b) do worka spojówkowego oka
+c) do zewnętrznego kącika oka
+d) na dolną powiekę
+(190) Aseptyka to:
+a) niedopuszczenie do zakażenia bądź zanieczyszczenia drobnoustrojami rany u pacjenta
+b) niedopuszczenie do zakażenia bądź zanieczyszczenia materiału , narzędzi i sprzętu
+c) posługiwanie się przez pielęgniarki narzędziami wyjałowionymi
+d) niedopuszczenie do zakażenia bądź zanieczyszczenia drobnoustrojami rany, miejsca, sprzętu, materiału i narzędzi.
+(191) W czasie iniekcji podskórnej u dorosłego można podać maksymalnie w jedno miejsce następującą ilość leku
+a) 1 ml
+b) 2 ml
+c) 3 ml
+d) 4 ml
+(192) W czasie iniekcji domięśniowej, w mięsień pośladkowy wielki, u człowieka dorosłego można jednorazowo podać maksymalnie następującą ilość leku
+a) 5 ml
+b) 6 ml
+c) 8 ml
+d) 10 ml
+(193) Pacjent z dusznością spoczynkową układany jest w pozycji
+a) wysokiej, z dobrym podparciem głowy
+b) płaskiej, z podkurczonymi nogami
+c) bezpiecznej, na boku
+d) na brzuchu, na miękkim podłożu
+(194) Leki doustne podajemy pacjentowi zawsze
+a) rano, w południe i wieczorem
+b) po głównych posiłkach
+c) zgodnie ze zleceniem lekarza
+d) na prośbę chorego lub jego rodziny
+(195) Podając leki doustne choremu
+a) podajemy bezpośrednio choremu do przyjęcia
+b) zostawiamy choremu na szafce przyłóżkowej
+c) prosimy aby chory przyjął leki dopiero w czasie posiłku
+d) prosimy aby chory przyjął leki wtedy gdy będzie źle się czuł
+(196) Tlenoterapia może być stosowana u chorego
+a) według decyzji pielęgniarki
+b) na zlecenie lekarza
+c) na prośbę chorego
+d) na prośbę rodziny chorego
+(197) Mocz do badania ogólnego u osoby dorosłej należy pobrać w ilości
+a) ok. 10 ml
+b) ok. 100 ml
+c) ok. 200 ml
+d) ok. 500 ml
+(198) W czasie toalety całego ciała pacjenta wodę należy zmienić:
+a) przynajmniej 1 raz
+b) zawsze, gdy jest zbyt chłodna i namydlona
+c) po umyciu klatki piersiowej
+d) wyłącznie na życzenie chorego
+(199) Przed rozpoczęciem dnia pracy, karmieniem chorych, zmianą pościeli zastosujesz:
+a) Higieniczne mycie rąk
+b) Socjalne mycie rąk
+c) Chirurgiczne mycie rąk
+d) Nie ma potrzeby mycia rąk
+(200) Stwierdzeniem fałszywym odnośnie mycia chirurgicznego rąk jest, że:
+a) Chirurgiczne mycie rąk całkowicie usuwa drobnoustroje flory przejściowej
+b) Przed myciem należy zdjąć wszelką biżuterię
+c) Jałową szczotką myć skórę rąk i przedramion do łokci
+d) Osuszać ręce i przedramiona za pomocą jałowej serwety
+(201) Po zmianie opatrunku u chorego zastosujesz:
+a) Higieniczne mycie rąk
+b) Socjalne mycie rąk
+c) Chirurgiczne mycie rąk
+d) Zwykłe mycie rąk
+(202) Krew lub jej preparat przechowywany w temperaturze 4˚ C przed przetoczeniem choremu należy:
+a) Ogrzać w pojemniku z ciepłą wodą
+b) Ogrzać w specjalnej, kontrolowanej łaźni przeznaczonej do ogrzewania krwi
+c) Pozostawić w pokoju zabiegowym na 2 godziny aby nabyła temperatury pokojowej
+d) Wszystkie powyższe stwierdzenia są błędne
+(203) Osocze zamrożone w temperaturze -30 ̊C należy przed przetoczeniem choremu:
+a) Ogrzać w pojemniku z ciepłą wodą
+b) Ogrzać w specjalnej, kontrolowanej łaźni przeznaczonej do ogrzewania krwi
+c) Pozostawić w pokoju zabiegowym na 4 godziny aby nabyło temperatury pokojowej
+d) Wszystkie powyższe stwierdzenia są błędne
+(204) Jeśli u pacjenta dojdzie do dużej utraty krwi wartości OCŻ będą:
+a) Podwyższone
+b) Obniżone
+c) W normie
+d) Niezmienione
+(205) Podczas odżywiania pacjenta przez sondę żołądkową niewłaściwym postępowaniem jest:
+a) Odessanie zalegającej treści żołądkowej przed rozpoczęciem karmienia
+b) Podawanie pokarmów i płynów o temperaturze około 30 ˚ C
+c) Podawanie pokarmów z szybkością 100 ml/5-10 min.
+d) Przepłukanie zgłębnika wodą o takiej samej objętości co objętość podanego pokarmu
+(206) Przekrój cewników urologicznych podaje się w skali:
+a) Foley’a
+b) Nelatona
+c) Tiemanna
+d) Charriera
+(207) Przyczyną retencji moczu nie jest:
+a) Brak warunków intymności
+b) stan po znieczuleniu ogólnym i zewnątrzoponowym
+c) pozycja leżąca
+d) zakażenie dróg moczowych
+(208) Zjawisko opadania krwinek (OB) spostrzegł i opisał:
+a) Baranowski
+b) Biernacki
+c) Koch
+d) Paster
+(209) Po dezynfekcji skóry:
+a) natychmiast wkłuć igłę w tkankę
+b) odczekać 5 sekund
+c) odczekać minimum 30 sekund
+d) nie ma znaczenia
+(210) Roztwory wodne do wstrzyknięć można łączyć:
+a) z lekami oleistymi
+b) z metalami ciężkimi
+c) z lekami wodnymi
+d) nie łączymy z innymi lekami
+(211) Miejsce założenia „motylka” tzw. igły Butterfly:
+a) okolica szyi
+b) okolica podobojczykowa
+c) okolica przedramienia
+d) okolica skroni
+(212) Dożylnie można podać:
+a) penicylinę prokainową
+b) testarpen
+c) roztwór wodny
+d) roztwór olejowy
+(213) Unikamy nakłucia jakich żył ze względu na ryzyko zakrzepicy żylnej:
+a) żył głowy
+b) żył stopy
+c) żył szyjnych
+d) żył przedramienia
+(214) Lekarz zlecił choremu 20 mς KCL. Podasz go:
+a) we wlewie kroplowym, bardzo szybko
+b) we wlewie kroplowym, bardzo wolno
+c) w 20 ml strzykawce z solą fizjologiczną
+d) w 20 ml strzykawce z glukoza 5%
+(215) Ilość płynu użytego podczas nawadniania organizmu wynosi:
+a) 1,0-1,5 l
+b) 2,0-2,5 l
+c) 2,5-3,0 l
+d) zgodnie z zapisem w indywidualnej karcie zleceń
+(216) Nazwa roztworu fizjologicznego odnosi się do roztworu:
+a) hipertonicznego
+b) izotonicznego
+c) hipotonicznego
+d) koloidowego
+(217) OCŻ, to:
+a) ciśnienie tętnicze krwi
+b) obwodowe ciśnienie żylne
+c) ośrodkowe ciśnienie żylne
+d) centralne ciśnienie tętnicze
+(218) Do odczytywania wartości OCŻ służy manometr:
+a) rtęciowy
+b) sprężynowy
+c) wodny
+d) spirytusowy
+(219) Próba biologiczna jest wykonywana:
+a) w laboratorium
+b) w gabinecie zabiegowym
+c) na początku przetaczania krwi
+d) pod koniec przetaczania krwi
+(220) Następstwem przetaczania niezgodnej grupowo krwi jest:
+a) wstrząs septyczny
+b) wirusowe zapalenie wątroby
+c) zespól nabytego upośledzenia odporności
+d) ostra wewnątrznaczyniowa hemoliza
+(221) Czynności związane z przygotowaniem cytostatyków do wstrzyknięcia mogą odbywać się w:
+a) pomieszczeniu socjalnym
+b) gabinecie zabiegowym
+c) w dyżurce pielęgniarskiej
+d) wydzielonym pomieszczeniu
+(222) Maksymalna ilość leku podana pacjentowi drogą podskórna wynosi:
+a) do 2 ml
+b) 0,2 ml
+c) do 1 ml
+d) 0,1 ml
+(223) Temperatura ciała pacjenta zmierzona w odbycie wynosi 37,5˚C. W karcie gorączkowej należy wykreślić krzywą temperatury w punkcie odpowiadającym wartości:
+a) 37,0˚C
+b) 37,2˚C
+c) 37,5˚C
+d) 37,4˚C
+(224) Zbieranie moczu do naczynia w przebiegu dobowej zbiórki moczu należy rozpocząć od:
+a) od ostatniej wieczornej porcji moczu
+b) od porannej porcji moczu
+c) od pierwszej porcji moczu oddanej przez pacjenta
+d) po oddaniu pierwszej porcji moczu do ubikacji
+(225) Dla samooczyszczenia mikrobiologicznego jamy ustnej pacjenta unieruchomionego należy
+a) Pędzlować jamę ustną boraksem z gliceryną,
+b) Podawać płyny obojętne do picia
+c) Masować brodę zgodnie ze wskazówkami zegara
+d) Płukać jamę ustną preparatami ziołowymi
+(226) U osób starszych nie należy zakładać kaniul i.v. do żył w okolicy
+a) Ramienia
+b) Przedramienia
+c) Dłoni
+d) Dłoni i stopy ?
+(227) U pacjenta z niedomykalnością powiek (w śpiączce) nie należy stosować okładów nawilżających z użyciem:
+a) Jałowej wody destylowanej
+b) Okulistycznych kropli homeopatycznych
+c) 0,9 % NaCl
+d) Jałowej wody destylowanej i okulistycznych kropli homeopatycznych
+(228) Zakres normy ciśnienia tętna wynosi
+a) 30 – 50 mmHg
+b) 20 – 40 mmHg
+c) 30 – 60 mmHg
+d) 20 – 60 mmHg
+(229) Ciśnienie tętna to:
+a) Różnica między ciśnieniem skurczowym i rozkurczowym
+b) Różnica między ciśnieniem rozkurczowym i skurczowym
+c) Różnica między ciśnieniem tętniczym mierzony rano i wieczorem
+d) Różnica między ciśnieniem tętniczym mierzony wieczorem i rano
+(230) Cewnik Foley”a lateksowy wymienia się najrzadziej co:
+a) 3 dni
+b) 5 dni
+c) 7 dni
+d) 10 dni
+(231) System Vacutainer jest stosowany do:
+a) Podawania leków i.v.
+b) Podawania leków i.m.
+c) Podawania leków i.c.
+d) Pobierania krwi
+(232) Zgodnie z obowiązującym prawem pielęgniarka może cewnikować pęcherz moczowy:
+a) U kobiety
+b) U mężczyzny
+c) U kobiety i mężczyzny
+d) U mężczyzny po ukończeniu kursu
+(233) Zgłębnik do żołądka ( u człowieka dorosłego) zakłada się na głębokość równą:
+a) Odległości od nadbrzusza do płatka usznego przez czubek nosa - ok. 50 60cm
+b) 30-60cm
+c) 40-70 cm
+d) Długości ramienia
+(234) Próbę biologiczną wykonuje:
+a) Lekarz
+b) Pielęgniarka
+c) Pracownik RCKiK
+d) Pracownik laboratorium
+(235) Przy podłączeniu każdej następnej porcji krwi lub preparatu krwiopochodnego musi być obecny:
+a) Lekarz
+b) Pielęgniarka
+c) Lekarz i pielęgniarka
+d) Pracownik laboratorium lub Pracownik RCKiK
+(236) Klizma to:
+a) Wlewka dorektalna
+b) Enema oczyszczająca
+c) Płukanie pęcherza
+d) Płukanie żołądka
+(237) Skala Glasgow służy do:
+a) diagnozowania przyczyn śpiączki cukrzycowej
+b) obliczeń statystycznych
+c) ustalenia wskazań do leczenia
+d) stwierdzenia stanu nieprzytomności.
+(238) BAL to: Płukanie oskrzelowo-płucne (ang. bronchoalveolar lavage, BAL)
+a) pobieranie moczu do badania mikrobiologicznego
+b) pobieranie popłuczyn pęcherzykowo-oskrzelowych do badania bakteriologicznego
+c) pobieranie krwi na posiew
+d) pobieranie plwociny do badania mikrobiologicznego
+(239) Niealergiczne powikłanie po podaniu np. penicyliny powstające w wyniku prowadzenia kryształków lub zawiesiny leku do naczynia żylnego to:
+a) zespół Hoigne
+b) wstrząs anafilaktyczny
+c) zapaść naczyniowa
+d) zapaść naczyniowa
+(240) Zespół Nicolau może powstać w wyniku:
+a) w następstwie wprowadzenia kryształków lub zawiesiny leku do naczynia tętniczego
+b) w następstwie wprowadzenia kryształków lub zawiesiny leku do naczynia żylnego
+c) w następstwie reakcji uczuleniowej organizmu
+d) w wyniku niedokrwienia mózgu
+(241) Aspirowanie jest to czynność wykonywana przed podaniem leku drogą domięśniową w celu:
+a) sprawdzenia czy igła jest w mięśniu
+b) sprawdzenia, że koniec igły nie tkwi w naczyniu krwionośnym
+c) sprawdzenia czy zabieg wykonany jest właściwą techniką
+d) sprawdzenia reakcji organizmu na podawany lek
+(242) Założony wenflon do żyły powinien być wymieniony po okresie:
+a) 6 dni
+b) 10 godzin
+c) 48 godzin
+d) 48-72 godzin
+(243) Odczyn Biernackiego jest to:
+a) test oceniający narażenie na powstanie odleżyn
+b) rodzaj obliczeń statystycznych
+c) badanie oceniające szybkość opadania leukocytów w osoczu
+d) niespecyficzny test przesiewowy wykonywany w przypadku podejrzenia chorób zapalnych oceniający szybkość opadania erytrocytów w osoczu
+(244) Próba biologiczna wykonywania przed przetoczeniem krwi lub preparatu krwi polega na:
+a) wolnym rozpoczęciu podania preparatu krwi przez 30 min.
+b) szybkim przetoczeniu 20-30 ml krwi lub preparatu krwiopochodnego a następnie zwolnieniu przepływu 6-10 kropli/minutę
+c) podaniu krwi lub preparatu krwi z szybkością 50 ml/min.
+d) podaniu ogrzanej krwi lub preparatu krwiopochodnego
+(245) Gorączka to:
+a) podwyższenie temperatury ciała powyżej górnej granicy normy tj. 37°C. Jest ogólnoustrojowym odczynem na działanie różnorodnych czynników.
+b) reakcja alergiczna organizmu
+c) wzrost temperatury ciała powyżej 40°C
+d) zaburzenie na poziomie nawodnienia organizmu
+(246) Obniżenie – ochłodzenie ciała poniżej:
+a) 36,6°C
+b) 35°C
+c) 28-26°C
+d) 20°C może prowadzić do śmierci wskutek porażenia ośrodka oddechowego i naczynioruchowego.
+(247) Górna wartość ciśnienia tętniczego to:
+a) 120/80 mmHg|
+b) 145/90 mmHg
+c) 200/120 mmHg
+d) 140/70 mmHg
+(248) Zgodnie z obowiązującym Rozporządzeniem Ministra Zdrowia określającym sposób i organizację leczenia krwią w zakładach opieki zdrowotnej osobą odpowiedzialną za leczenie krwią odpowiada:
+a) tylko pielęgniarka
+b) pielęgniarka oddziałowa
+c) kierownik zakładu, lekarz i pielęgniarka
+d) ratownik medyczny
+(249) OCŻ jest ciśnieniem panującym w:
+a) tętnicy płucnej
+b) żyle podobojczykowej
+c) żyle szyjnej wspólnej
+d) żyle głównej (górnej i dolnej)
+(250) Powodem do zmiany dostępu żylnego jest:
+a) zabieg operacyjny pacjenta,
+b) niewłaściwe miejsce wkłucia,?
+c) zaczerwienienie wzdłuż przebiegu żyły,
+d) ból uogólniony pacjenta.
+(251) Dożylnie podaje się lek działający drażniąco na:
+a) tkankę podskórną i mięśniową,
+b) tkankę mięśniową,
+c) tkankę łączną,
+d) tkankę skóry.
+(252) Po zdezynfekowaniu pola zabiegu:
+a) jeszcze raz sprawdza się palcami umiejscowienie żyły, która ma być nakłuwana,
+b) sprawdza się parametry chorego,
+c) wprowadza się igłę do światła żyły,
+d) prosi się pacjenta, by pokazał, którą żyłę mamy nakłuć.
+(253) Przeciwwskazaniem do pobierania treści pokarmowej z żołądka jest:
+a) podejrzenie raka żołądka,
+b) zatrucie lekami,
+c) żylaki przełyku,
+d) zatrucie grzybami.
+(254) We wlewce doodbytniczej wykorzystuje się:
+a) parafinę 100 ml,
+b) glicerynę 25 ml,
+c) oliwę 130 ml,
+d) parafinę 200 ml.
+(255) Ilość wydzielanego soku żołądkowego na dobę u zdrowego człowieka wynosi około:
+a) 1,5 l/ dobę,
+b) 6 l/ dobę,
+c) 3 l/ dobę,
+d) 4 l/dobę.
+(256) Mocz na posiew pobiera się:
+a) do specjalnego, jałowego pojemnika,
+b) bez zgody pacjenta, pobierając próbkę moczu z worka,
+c) koniecznie musi być to mocz pobrany z nocy,
+d) zawsze do pobrania moczu na posiew trzeba choremu założyć cewnik
+(257) Pacjent ma założony cewnik do pęcherza moczowego i mocz odprowadzany jest do worka. Co należy zrobić w przypadku pobrania moczu na badania ogólne:
+a) zmienić worek na mocz i pobrać próbkę moczu z nowego worka,
+b) nie pobierać moczu w ogóle,
+c) zacisnąć cewnik kocherem na około 1,5h, a następnie pobrać mocz do badania bezpośrednio z cewnika,
+d) założyć nowy cewnik i dopiero pobrać mocz na badanie.
+(258) Bilans płynów prowadzi się:
+a) tylko u osób dorosłych,
+b) przez co najmniej 24h,
+c) tylko u pacjentów mających problemy z wydalaniem moczu,
+d) u wszystkich pacjentów, którzy mają założony cewnik
+(259) Prowadząc DZM należy:
+a) oddawać mocz do specjalnego słoja umieszczonego na sali chorego,
+b) słój na mocz powinien być przechowywany w chłodnym zacienionym miejscu (najlepiej w lodówce),
+c) prowadzić zbiórkę moczu przez połowę doby,
+d) prowadzić zbiórkę moczu tylko u pacjentów, którzy mają założony cewnik.
+(260) U zdrowego człowieka w moczu nie powinno być
+a) glukozy,
+b) białka,
+c) glukozy, białka i krwi,
+d) glukozy i krwi.
+(261) Do badania ogólnego moczu należy pobrać mocz:
+a) mocz z worka na mocz,
+b) mocz powinien być pobrany po uprzednim podmyciu się pacjenta,
+c) próbka do analizy nie powinna być większa jak 50 ml,
+d) zawsze powinien być to mocz z porcji nocnej.
+(262) Niebezpieczeństwem podczas założenie cewnika do pęcherza moczowego jest:
+a) niemożność wprowadzenia cewnika do pęcherza moczowego na skutek nieprawidłowości anatomicznych,
+b) wprowadzenie infekcji,
+c) przebicie cewnika pęsetą,
+d) przebicie balonika samouszczelniającego.
+(263) Wykonując toaletę drzewa oskrzelowego u pacjenta z tracheostomią podczas wprowadzania cewnika do tchawicy wyłącza się ssanie, aby nie spowodować:
+a) krwawienia
+b) niedodmy
+c) urazu
+d) niedotlenienia
+e) wszystkie powyższe
+(264) Stosowane mydło do mycia skory wokół stomii powinno być o odczynie:
+a) pH 4,5
+b) pH 5,5
+c) pH 6,5
+d) pH 7,5
+(265) Do irygacji stomii zastosujesz wodę o temperaturze:
+a) 30oC
+b) 32oC
+c) 34oC
+d) 36oC
+(266) U pacjentów z ileostomią ze względu na konsystencję płynną wypróżnień mogą wystąpić:
+a) niedobory potasu
+b) niedobory soli
+c) odwodnienie
+d) wszystkie powyższe powikłania są możliwe
+(267) Homeostaza jest to pojęcie, które oznacza (wybierz właściwą odpowiedź):
+a) tamowanie krwi
+b) przemianę materii
+c) równowagę środowiska wewnętrznego
+d) adaptację
+(268) Podkreśl składnik, który wpływa korzystnie na formowanie się mas kałowych:
+a) tłuszcz
+b) woda
+c) błonnik
+d) węglowodany
+(269) Dobowa norma wydalanie moczu wynosi:
+a) 1000-1500 ml (str. 556 T 1.2)
+b) 1200-1800 ml
+c) 1500-2000 ml
+d) 1700-2200 ml
+(270) O wysokiej gorączce mówimy wtedy kiedy temperatura wynosi:
+a) 37,1-37,7oC
+b) 38,6-39,0oC
+c) 37,8-38,5oC
+d) 39,1-39,9oC
+(271) Tablice Snellena wykorzystywane są do :
+a) badania zaburzeń widzenia barwnego - Ischihary
+b) badania ostrości wzroku
+c) badania położenia i ustawienia gałek ocznych
+d) wykrycia zeza - Cover test
+(272) Do badań nieinwazyjnych zaliczamy
+a) zdjęcie rentgenowskie klatki piersiowej
+b) ultrasonografia
+c) magnetyczny rezonans jądrowy
+d) wszystkie odpowiedzi prawidłowe
+(273) Celem stosowania inhalacji jest:
+a) natlenianie organizmu
+b) wywołanie znieczulenia ogólnego
+c) zadziałanie lecznicze na błonę śluzową dróg oddechowych
+d) wszystkie odpowiedzi poprawne
+(274) Jaką ilość leku można podać podskórnie:
+a) 60 ml
+b) 2 ml
+c) 10 ml
+d) 0,1 ml
+(275) Przez błony śluzowe podaje się leki do:
+a) worka spojówkowego
+b) nosa
+c) pochwy
+d) wszystkie prawidłowe
+(276) Okład ciepły stosujemy przez:
+a) 2-3 godz.
+b) 0,5 – 1 godz.
+c) 6-8 godz.
+d) 15 min
+(277) jaką dietę zastosujesz u pacjenta z chorobą wrzodową żołądka i dwunastnicy:
+a) bogatopotasowa
+b) bogatobiałkowa
+c) ubogokaloryczna
+d) oszczędzająca
+(278) Szpik kostny czerwony najczęściej pobiera się z:
+a) mostka
+b) kości udowej
+c) kości biodrowej
+d) odpowiedzi a, c są prawidłowe
+(279) Wskazaniem do zastosowania ciepła są:
+a) krwotoki
+b) oparzenia
+c) ostre stany zapalne
+d) zapalenia ucha środkowego
+(280) Przeciwwskazaniem do zastosowania zimna jest:
+a) stłuczenia
+b) skręcenia
+c) krwotok z nosa
+d) tętnicze zaburzenia dopływu krwi
+(281) Do celu diagnostycznego cewnikowania pęcherza moczowego nie należy:
+a) pobranie moczu do badania
+b) sprawdzenie czy obecny jest mocz w pęcherzu
+c) założenie cewnika na stałe w przypadku zatrzymania moczu
+d) określenie diurezy godzinowej
+(282) Jakiego środka leczniczego nie stosujemy w płukaniu pęcherza moczowego:
+a) 0,1% roztwór azotanu srebra
+b) 1-1,5% roztwór rivanolu
+c) 0,9% NaCl
+d) Oktaniseptu
+(283) Celem leczniczym wstrzyknięć dożylnych nie jest:
+a) podanie leku
+b) nawodnienie organizmu
+c) pobranie krwi do badanie
+d) podanie krwi
+(284) Jakie zasady należy uwzględnić stosując u pacjenta tlenoterapię:
+a) pisemne zlecenie lekarza
+b) powinny być wykonane badania gazometryczne
+c) należy używać sprzęt jednorazowego użytku
+d) wszystkie odpowiedzi prawidłowe
+(285) Prawidłowa temperatura mierzona w odbycie jest:
+a) o 1oC wyższa niż mierzona pod pachą
+b) o 0,5oC niższa niż mierzona pod pachą
+c) o 0,5oC wyższa niż mierzona pod pachą
+d) o 0,1oC niższa niż mierzona pod pachą
+(286) Wskazaniem do zastosowania zimna są:
+a) Bole mięśniowe - ciepło suche
+b) wzdęcia
+c) krwotoki z nosa
+d) choroby reumatyczne
+(287) Wykonując wstrzyknięcie podskórne wprowadzamy igłę pod kątem:
+a) 25o
+b) 45o
+c) 60o
+d) 90o
+(288) Wg WHO codzienna podaż soli nie powinna przekraczać:
+a) 4g
+b) 5g
+c) 6g
+d) 7g
+(289) Dieta oczyszczająca oznacza:
+a) Ograniczenie pokarmów zawierających substancje pobudzające wydzielanie soku żołądkowego
+b) Ograniczeniu spożycia substancji resztkowych
+c) Ograniczeniu podaży soli
+d) Ograniczeniu podaży białka
+(290) Gimnastyka oddechowa nie ma na celu:
+a) Zwiększenia ruchomości klatki piersiowej
+b) Poprawienia mechaniki oddychania
+c) Zapobiegania niedodmie i zapaleniu płuc
+d) Utrzymania skory w stanie pozwalającym na prawidłowe jej funkcjonowanie
+(291) Gimnastyka ogólno usprawniająca powinna być wykonywana nie rzadziej niż:
+a) 1 raz dziennie
+b) 2 razy dziennie
+c) 3 razy dziennie
+d) 4 razy dziennie
+(292) Kolostomia jest to stoma wykonana na:
+a) Jelicie cienkim - ileostomia
+b) Jelicie grubym
+c) Moczowodzie - urostomia
+d) Przełyku
+(293) Oceniając oddech pacjenta zwracamy uwagę na:
+a) rytm i jakość oddechów;
+b) pracę dodatkowych mięśni oddechowych;
+c) odgłosy wydawane przy wdechu i wyd echu;
+d) wszystkie odpowiedzi są prawidłowe.
+(294) Dokonując pomiaru ciśnienia tętniczego krwi napełniamy mankiet powietrzem aż do momentu, kiedy wartość ciśnienia na manometrze jest:
+a) o 10 mmHg wyższa od wartości przy którym zanikło tętno;
+b) o 30 mmHg wyższa od wartości przy którym zanikło tętno;
+c) napełniamy mankiet do maksymalnej wartości;
+d) sugerujemy się wartością poprzedniego pomiaru ciśnienia tętniczego krwi.
+(295) Oceniając reakcje odruchowe kończyn dolnych zwracamy uwagę na:
+a) obecność odruc hów;
+b) symetryczność odruchów;
+c) wzmożenie odruchów/ zniesienie odruchów;
+d) wszystkie odpowiedzi są prawidłowe.
+(296) Ile wynosi wskaźnik BMI u pacjenta ważącego 78 kg, przy wzroście 170 cm.?:
+a) 24,8
+b) 25,96
+c) 26.98
+d) 27,21
+(297) Według BMI otyłość mieści się w granicach:
+a) 20-25
+b) 25-30
+c) 30-40
+d) 35-45
+(298) W jakiej odległości od tablicy Snellena musi stanąć badany, aby pomiar ostrości wzroku był prawidłowy?:
+a) 2m
+b) 3m
+c) 4m
+d) 5m
+(299) Oceniając stan jamy ustnej zwracamy uwagę między innymi na zabarwienie języka. Język w kolorze malinowym z wyraźnie zaznaczonymi brodawkami jest charakterystycznym objawem towarzyszącym:
+a) niedokrwistości
+b) chorobom układu pokarmowego
+c) płonicy
+d) odrze
+(300) Na jaką głębokość należy wprowadzić zgłębnik do żołądka w celu pobrania treści do badania:
+a) do 35 cm
+b) do 40 cm
+c) do 45 cm
+d) do 50 cm
+(301) Laparoskopia to badanie polegające na:
+a) wziernikowaniu odbytnicy - rektoskopia
+b) wziernikowaniu jelita grubego - rektoskopia, endoskopia?
+c) wziernikowaniu jamy otrzewnej
+d) wziernikowaniu tchawicy i oskrzeli - bronchoskopia
+(302) Pobranie płynu mózgowordzeniowego wykonuje się wprowadzając igłę punkcyjną do przestrzeni :
+a) L3 - L4
+b) L4 – L5
+c) L5 – L6
+d) odpowiedzi a, b są poprawne
+(303) Przed którym z wymienionych badań podaję się histaminę (środek pobudzający wydzielanie):
+a) kolonoskopią
+b) rektoskopią
+c) zgłębnikowaniem żołądka
+d) zgłębnikowaniem dwunastnicy
+(304) W jakiej temperaturze należy przechowywać leki takie jak czopki, szczepionki?:
+a) 0-2oC
+b) 2-4oC
+c) 4-6oC
+d) w temperaturze pokojowej
+(305) Drogą wstrzyknięć domięśniowych można podawać roztwory:
+a) wodne
+b) oleiste
+c) zawiesiny
+d) wszystkie odpowiedzi prawidłowe
+(306) Jednym ze śródków stosowanych do kąpieli leczniczych jest nadmanganian potasu, którego działanie jest:
+a) odkażające
+b) osłaniające
+c) przeciwgrzybiczne
+d) wysuszające i odkażające
+(307) Bogatym źródłem pokarmowym błonnika są:
+a) świeże pszenne pieczywo;
+b) pieczywo razowe
+c) otręby, warzywa, owoce
+d) odpowiedzi b, c są prawidłowe
+(308) W przypadku oparzenia kwasami należy przemyć ranę:
+a) 3% roztworem wodorowęglanu sodu (sodą oczyszczoną)
+b) 1% roztworem kwasu octowego
+c) 3% roztworem kwasu borowego
+d) nie należy przemywać żadnym z wymienionych śródków
+(309) Do witamin rozpuszczalnych w tłuszczach nie zaliczamy:
+a) C
+b) A
+c) D
+d) E
+(310) Odsysanie najdłużej może trwać:
+a) 15 sekund
+b) 20 sekund
+c) 30 sekund
+d) 40 sekund
+(311) Edukacja zdrowotna to:
+a) przygotowanie pacjenta do samoopieki
+b) proces, w którym ludzie uczą się, jak dbać o zdrowie własne i zdrowie społeczności w której żyją
+c) umożliwienie ludziom decydowania o sprawach ich zdrowia
+d) rozpoznawanie, rozwiązywanie i ocenianie problemów zdrowotnych pacjenta
+(312) Ścieląc lóżko pacjentowi leżącemu, zgłaszającemu duszność musisz zrezygnować z pewnego elementu wchodzącego w zakres słania łóżka. Z którego elementu zrezygnujesz uwzględniając stan pacjenta?
+a) z ułożenia pacjenta na prawym boku, naciągania podkładów
+b) z wyjęcia poduszek na czas ścielenia łóżka
+c) z poprawiania poduszek, naciągania prześcieradła na całej długości
+d) z naciągania dolnych warstw bielizny pościelowej
+(313) Celem pielęgnacji skory nie jest:
+a) oczyszczanie skory
+b) odżywianie skory
+c) wysuszanie skory
+d) ochrona skory
+(314) Do pielęgnacji skory powinno się stosować wodę:
+a) zawierającą sole mineralne
+b) zawierającą środki do pielęgnacji skory
+c) miękką
+d) chlorowaną
+(315) Które z wymienionych składników pokarmowych dostarczają organizmowi energii:
+a) tłuszcze, białka, węglowodany
+b) białka, tłuszcze, witaminy
+c) tylko tłuszcze
+d) tylko węglowodany
+(316) Łojotokowa wysypka zapalna umiejscowiona jest:
+a) w fałdach szyjnych
+b) w pachwinach
+c) na twarzy
+d) wszystkie odpowiedzi prawidłowe
+(317) Pielęgniarka mająca prawo wykonywania zawodu jest uprawniona do wykonania na zlecenie lekarza:
+a) szczepień ochronnych, wstrzyknięć domięśniowych, kaniulacji żył;
+b) wstrzyknięć domięśniowych, podskórnych, wlewów dożylnych;
+c) wstrzyknięć śródskórnych, podskórnych, domięśniowych, kaniulacji żył;
+d) wstrzyknięć podskórnych, domięśniowych, szczepień ochronnych u noworodków.
+(318) Leki oleiste podajemy tylko:
+a) podskórnie;
+b) domięśniowo;
+c) dożylnie;
+d) w ogóle nie podajemy we wstrzyknięciach.
+(319) Uwzględniając warunki w tkankach do podawania leków we wstrzyknięciach, określamy, że tkanka podskórna:
+a) jest dobrze unaczyniona, dlatego leki wchłaniają się bardzo powoli;
+b) jest słabo unaczyniona, leki wchłaniają się szybko;
+c) jest dobrze unerwiona i bardzo słabo unaczyniona, leki wchłaniają się szybko;
+d) jest słabo unaczyniona i dobrze unerwiona, leki wchłaniają się wolno.
+(320) Wchłanianie leku do organizmu polega na wniknięciu leku przez błonę komórkową. Największą rolę w tym procesie odgrywa:
+a) osmoza i pinocytoza;
+b) dyfuzja przez pory i transport czynny;
+c) dyfuzja bierna i transport czynny;
+d) transport bierny i osmoza.
+(321) Po podaniu niektórych substancji we wstrzyknięciach nie należy rozmasowywać miejsca wkłucia, dotyczy to:
+a) podania domięśniowo zawiesin;
+b) podania podskórnie leków oleistych;
+c) podania roztworów wodnych podskórnie;
+d) podania domięśniowo roztworów wodnych.
+(322) Otrzymałeś zlecenie wykonania próby tuberkulinowej, dysponujesz jednak tylko strzykawkami o pojemności 2 ml, 5 ml oraz 10 ml:
+a) nie wykonasz zlecenia z powodu braku sprzętu;
+b) wykonasz próbę strzykawką o pojemności 2 ml;
+c) wykonasz próbę strzykawką o pojemności 5 ml;
+d) pożyczysz strzykawki o pojemności 1 ml, wykonasz próbę, przekażesz swojemu przełożonemu informację o braku strzykawek o pojemności 1 ml.
+(323) Czy można przykleić plaster samoprzylepny z pojemnikiem na podrażnioną skórę wokół urostomii?
+a) tak
+b) nie
+(324) Masz do wykonania dużo zleceń lekarskich, głównie wstrzyknięć, bardzo się spieszysz. W trakcie wykonywania zabiegów stwierdzasz, że pojemnik na zużyte igły jest wypełniony do 2/3 objętości. Jak postąpisz:
+a) przerwiesz realizowanie zabiegów, wymienisz pojemnik na nowy;
+b) będziesz kontynuować swoje czynności i po zakończeniu ich realizacji wymienisz pojemnik;
+c) zakończysz swój dyżur i przekażesz informację osobie zmieniającej cię, że należy wymienić pojemnik;
+d) zakończysz realizowanie swoich czynności i wrzucisz zużyte igły do odpadów komunalnych.
+(325) Masz do podania lek w pompie infuzyjnej pacjentowi leżącemu w bardzo niewielkiej sali, masz trudności z ustawieniem pompy, jej ramię zahacza o wezgłowie łóżka pacjenta. Jak postąpisz:
+a) pozostawisz tak, jak jest;
+b) ustawisz pompę na dodatkowym stojaku, umieścisz ją w odległości, w której zachowany jest swobodny ruch ramienia;
+c) pozostawisz tak, jak jest, poprosisz pacjenta leżącego obok o przesuwanie pompy;
+d) wyłączysz pompę i poczekasz, aż zwolni się miejsce na większej sali.
+(326) Jak postąpisz z penem po podaniu pacjentowi insuliny:
+a) założysz ponownie osłonkę na igłę, następnie skuwkę na pen;
+b) odkręcisz igłę, następnie założysz skuwkę na pen;
+c) założysz ponownie osłonkę na igłę, odkręcisz igłę, następnie założysz skuwkę na pen i schowasz go do szafki z lekami;
+d) założysz ponownie osłonkę na igłę, odkręcisz igłę, następnie założysz skuwkę na pen i schowasz go do lodówki.
+(327) Jak przygotujesz miejsce wykonania próby uczuleniowej na penicylinę:
+a) ocenisz wzrokowo, czy nie ma przeciwwskazań, zdezynfekujesz środkiem odkażającym zawierającym alkohol;
+b) ocenisz wzrokowo, czy nie ma przeciwwskazań, zdezynfekujesz środkiem odkażającym zawierającym alkohol, umyjesz wodą, osuszysz gazikiem sterylnym;
+c) ocenisz wzrokowo, czy nie ma przeciwwskazań, zdezynfekujesz środkiem odkażającym zawierającym alkohol, umyjesz wodą;
+d) ocenisz wzrokowo, czy nie ma przeciwwskazań, umyjesz wodą z mydłem, spłuczesz pod bieżącą wodą, pozostawisz do wyschnięcia.
+(328) Wykonujesz ponowną próbę tuberkulinową u dziecka; poprzednią próbę wykonano 10 miesięcy temu. Jakie wybierzesz miejsce:
+a) środkowy odcinek lewego przedramienia;
+b) środkowy odcinek prawego przedramienia;
+c) 1/3 górną prawego przedramienia;
+d) 1/3 górną lewego przedramienia.
+(329) Otrzymujesz informację o narodzeniu noworodka ważącego 1800g.Jak postąpisz:
+a) zaszczepisz noworodka szczepionką BCG;
+b) poczekasz do badania lekarskiego i zastosujesz się do decyzji lekarza;
+c) zaszczepisz dziecko po zakwalifikowaniu go do szczepienia przez lekarza, po uzyskaniu masy ciała powyżej 2000 g;
+d) zaszczepisz dziecko po uzyskaniu masy ciała powyżej 2000 g.
+(330) Przy zamierzonym leczeniu penicyliną prokainową chorych, u których w wywiadzie stwierdzono objawy nadwrażliwości na penicylinę, należy równocześnie z próbą śródskórną z testarpenem wykonać próbę śródskórną z prokainą. Jaką dawkę leku należy podać:
+a) 0,1 ml 2% roztworu prokainy;
+b) 0,2 ml 2% roztworu prokainy;
+c) 0,1 ml 2,5% roztworu prokainy;
+d) 0,1 ml 1% roztworu prokainy.
+(331) Masz do podania pacjentowi insulinę krótko działającą. Jaką wybierzesz okolicę:
+a) udową, brzuszną;
+b) pośladkową, ramię;
+c) międzyłopatkową, pośladkową;
+d) brzuszną, ramię.
+(332) Podajesz dorosłemu pacjentowi insulinę przy użyciu strzykawki i igły. Jaką zastosujesz technikę:
+a) utworzenie fałdu skórnego, wkłucie pod kątem 45°, podanie leku;
+b) utworzenie fałdu skórnego, wkłucie pod kątem 45°, wykonanie ruchu aspirującego, podanie leku;
+c) wkłucie pod kątem 90°, wykonanie ruchu aspirującego, podanie leku;
+d) wkłucie pod kątem 45°, wykonanie ruchu aspirującego, podanie leku.
+(333) Otrzymałeś zlecenie wykonania szczepienia u dziecka drogą domięśniową. Jakie wybierzesz najlepsze miejsce:
+a) mięsień naramienny prawy;
+b) mięsień naramienny lewy;
+c) udo, przednio-boczną część;
+d) pośladek.
+(334) Dysponujesz igłami do penów tylko o wielkości 8 mm. Masz wykonać wstrzyknięcie insuliny penem u bardzo szczupłej osoby. Jaką zastosujesz technikę:
+a) utworzysz fałd skórny, wprowadzisz igłę pod kątem 45°, podasz lek;
+b) wprowadzisz igłę pod kątem 45°, podasz lek;
+c) utworzysz fałd skórny, wprowadzisz igłę pod kątem 90°, podasz lek;
+d) wprowadzisz igłę pod kątem 90°, podasz lek.
+(335) Celem wstrzyknięcia domięśniowego jest:
+a) odciążenie i (lub) ochrona przewodu pokarmowego pacjenta;
+b) szybkie wchłanianie leku w celu zadziałania terapeutycznego;
+c) brak możliwości podania leku pacjentowi doustnie;
+d) odciążenie układu pokarmowego, szybkie wchłanianie leku, brak możliwości podania doustnego.
+(336) Masz do podania domięśniowo pacjentowi unieruchomionemu po zabiegu operacyjnym lek o objętości 2 ml. Jakie wybierzesz miejsce?
+a) mięsień pośladkowy średni, mięsień czworogłowy uda;
+b) mięsień pośladkowy wielki, mięsień czworogłowy uda;
+c) mięsień czworogłowy uda, mięsień naramienny;
+d) mięsień naramienny, mięsień pośladkowy średni.
+(337) Czas wchłaniania leków podawanych domięśniowo wynosi:
+a) 20-25 min;
+b) 10-15 min;
+c) 30 min;
+d) 5-10 min. - dożylnie
+(338) Prawidłowa technika podawania leków domięśniowo to:
+a) naciągnięcie skóry, wprowadzenie igły na głębokość 3/4, wykonanie ruchu aspirującego, podanie leku pod kątem 90°;
+b) naciągnięcie skóry, wprowadzenie igły na głębokość 3/4, podanie leku pod kątem 90°;
+c) wprowadzenie igły na głębokość 3/4, wykonanie ruchu aspirującego, podanie leku pod kątem 90°;
+d) naciągnięcie skóry, wprowadzenie igły w całości, wykonanie ruchu aspirującego, podanie leku pod kątem 90°.
+(339) Krew pobraną na OB należy umieścić w:
+a) suchej probówce;
+b) probówce z cytrynianem sodu;
+c) probówce z heparyną;
+d) probówce z EDTA.
+(340) Po uciśnięciu żyły opaską uciskową krew do badania należy pobrać w czasie nie dłuższym niż:
+a) 1 min;
+b) 1,5 min;
+c) 2 min;
+d) 3 min.
+(341) Przyspieszone opadanie krwinek u osób zdrowych występuje:
+a) w okresie niemowlęcym;
+b) w podeszłym wieku;
+c) u kobiet w czasie owulacji;
+d) w stanach przemęczenia.
+(342) W iniekcji dożylnej podaje się lek w ilości nie większej niż:
+a) 30 ml;
+b) 60 ml;
+c) 100 ml;
+d) 150 ml;
+(343) W badaniu OB stosunek antykoagulantu do krwi powinien wynosić:
+a) 1:1
+b) 1:2
+c) 1:3
+d) 1:4
+(344) U kobiet do 60. roku życia norma OB po 1 h wynosi:
+a) 8 mm/h;
+b) 12 mm/h;
+c) 15 mm/h;
+d) 20 mm/h.
+(345) Na oznaczenie grupy krwi u człowieka dorosłego należy pobrać minimum:
+a) 4 ml krwi;
+b) 6 ml krwi;
+c) 8 ml krwi;
+d) 10 ml krwi.
+(346) Pobierając do badania krew włośniczkową, należy nożyk wprowadzić na głębokość:
+a) 1 mm;
+b) 1,5 mm;
+c) 2 mm;
+d) 3 mm.
+(347) Pobierając krew na oznaczenie układu krzepnięcia, należy zachować odpowiednią proporcję antykoagulantu i krwi. Wynosi ona:
+a) 1:4
+b) 1:5
+c) 1:8
+d) 1:9
+(348) Wybierając do kaniulacji żyły przed rozpoczęciem długotrwałego leczenia dożylnego, w pierwszej kolejności należy wykorzystać żyły:
+a) centralne;
+b) położone najbardziej obwodowo;
+c) położone w dole łokciowym;
+d) położone w obrębie kończyn dolnych.
+(349) Przy ustalaniu prędkości kroplowego wlewu dożylnego należy pamiętać, że 1 ml cieczy odpowiada:
+a) 10 kroplom;
+b) 20 kroplom;
+c) 30 kroplom;
+d) 40 kroplom.
+(350) Najlepszym miejscem do podawania produktów do żywienia pozajelitowego jest żyła:
+a) odłokciowa;
+b) ramienna;
+c) udowa;
+d) główna.
+(351) Wymiana kaniuli założonej do żyły powinna odbywać się co:
+a) 12 h;
+b) 12-24 h;
+c) 24-48 h;
+d) 48-72 h.
+(352) Prawidłowe stężenie glukozy we krwi wynosi:
+a) 60 mg/dl;
+b) 70-115 mg/dl;
+c) 120-130 mg/dl;
+d) 130 mg/dl.
+(353) Prawidłowa wartość trombocytów to:
+a) 100-200 tys.;
+b) 150-200 tys.;
+c) 150-250 tys.;
+d) 150-400 tys.
+(354) Próba Allena jest wykonywana w celu oceny drożności:
+a) tętnicy piszczelowej;
+b) żyły odłokciowej;
+c) tętnicy łokciowej;
+d) tętnicy ramiennej.
+(355) Za prawidłowy wynik próby Allena przyjmuje się czas:
+a) 5-6 s;
+b) 10-15 s;
+c) 15 s;
+d) 20 s.
+(356) W celu lepszego ukrwienia palca przeznaczonego do pobrania krwi włośniczkowej należy:
+a) umyć ręce pacjenta w ciepłej wodzie, osuszyć, zastosować mocny ucisk;
+b) zastosować tytko mocny ucisk opuszki palca;
+c) umyć ręce pacjenta w ciepłej wodzie, osuszyć, lekko masować opuszkę palca przez 10-15 min;
+d) zastosować tylko lekkie masowanie tuż przed nakłuciem opuszki palca.
+(357) Za prawidłowe wypełnienie skierowania na oznaczenie grupy krwi odpowiada:
+a) osoba pobierająca krew na badanie;
+b) ordynator oddziału;
+c) lekarz zlecający badanie;
+d) pracownik pracowni serologicznej.
+(358) Próbę krzyżową wykonuje się w celu określenia:
+a) zgodności krwi dawcy i biorcy;
+b) grupy krwi i czynnika Rh dawcy;
+c) grupy krwi i czynnika Rh biorcy;
+d) niezgodności serologicznej.
+(359) Próbę Allena wykonuje się przed nakłuciem tętnicy:
+a) podobojczykowej;
+b) ramiennej;
+c) udowej;
+d) promieniowej.
+(360) Po nakłuciu tętnicy udowej opatrunek uciskowy na miejscu wkłucia należy utrzymywać przez:
+a) 1 h;
+b) 2 h;
+c) 3h;
+d) 4h.
+(361) Po nakłuciu tętnicy promieniowej opatrunek uciskowy powinien pozostawać na miejscu wkłucia przez:
+a) 1 h;
+b) 2h;
+c) 3h;
+d) 4 h.
+(362) Przetoczenie 1 jednostki krwi pełnej lub koncentratu krwinek czerwonych nie powinno trwać dłużej niż:
+a) 1 h;
+b) 2 h;
+c) 3h;
+d) 4h.
+(363) Po zakończeniu transfuzji krwi pacjenta należy obserwować przez:
+a) 2 h;
+b) 4h;
+c) 6h;
+d) 12 h.
+(364) Osoba dokonująca oceny zgodności krwi biorcy i dawcy przed przetoczeniem powinna złożyć swój podpis na:
+a) formularzu grupy krwi pacjenta;
+b) karcie gorączkowej pacjenta;
+c) wyniku próby zgodności;
+d) w książce transfuzjologicznej.
+(365) Do późnych powikłań poprzetoczeniowych zalicza się:
+a) odczyn anafilaktyczny;
+b) reakcje gorączkowe;
+c) zakażenia wirusowe;
+d) zakażenia bakteryjne.
+(366) Pojemnik i aparat po przetoczeniu krwi należy:
+a) umieścić w płynie dezynfekcyjnym i dezynfekować przez 30 min;
+b) przechowywać w lodówce w temp. 6-8°C przez 5 dni;
+c) umieścić w pojemniku na odpady do spalenia;
+d) umieścić w pojemniku z odpadami komunalnymi.
+`;
+
+/* ============================================================
+   KONFIG: ODPOWIEDZI — klucz poprawnych odpowiedzi.
+   Format: (numer)-litera; kilka liter po przecinku = poprawna
+   kolejność w pytaniu sekwencyjnym.
+   ============================================================ */
+const answersText = `
+(1)-c (2)-b (3)-a (4)-d (5)-b (6)-a (7)-d (8)-c (9)-b (10)-a
+(11)-d (12)-a (13)-a (14)-b (15)-c (16)-d (17)-c (18)-c (19)-b (20)-c
+(21)-b (22)-a (23)-c (24)-a (25)-d (26)-b (27)-b (28)-b (29)-c (30)-b
+(31)-b (32)-c (33)-a (34)-d (35)-c (36)-b (37)-c (38)-b (39)-c (40)-c
+(41)-b (42)-c (43)-b (44)-a (45)-d (46)-c (47)-a (48)-a (49)-c (50)-c
+(51)-b (52)-b (53)-c (54)-d (55)-d (56)-b (57)-c (58)-b (59)-d (60)-a
+(61)-a (62)-b (63)-c (64)-b (65)-a (66)-a (67)-c (68)-a (69)-a (70)-a
+(71)-a (72)-c (73)-c (74)-b (75)-b (76)-d (77)-b (78)-b (79)-d (80)-a
+(81)-c (82)-d (83)-c (84)-c (85)-a (86)-b (87)-b (88)-d (89)-c (90)-b
+(91)-a (92)-c (93)-b (94)-a (95)-d (96)-c (97)-d (98)-d (99)-a (100)-c
+(101)-d (102)-b (103)-a (104)-d (105)-a (106)-a (107)-c (108)-a (109)-a (110)-c
+(111)-c (112)-c (113)-b (114)-b (115)-d (116)-b (117)-c (118)-c (119)-b (120)-d
+(121)-c (122)-c (123)-b (124)-c (125)-c (126)-b (127)-d (128)-c (129)-b (130)-c
+(131)-d (132)-d (133)-c (134)-d (135)-d (136)-b (137)-a (138)-c (139)-c (140)-d
+(141)-c (142)-d (143)-b (144)-b (145)-c (146)-c (147)-b (148)-a (149)-b (150)-c
+(151)-c (152)-b (153)-c (154)-b (155)-c (156)-b (157)-b (158)-d (159)-c (160)-c
+(161)-b (162)-d (163)-c (164)-c (165)-c (166)-a (167)-b (168)-b (169)-c (170)-b
+(171)-d (172)-c (173)-d (174)-c (175)-b (176)-b (177)-d (178)-b (179)-c (180)-b
+(181)-a (182)-b (183)-c (184)-a (185)-d (186)-d (187)-d (188)-a (189)-b (190)-d
+(191)-b (192)-d (193)-a (194)-c (195)-a (196)-b (197)-b (198)-b (199)-b (200)-c
+(201)-a (202)-d (203)-b (204)-b (205)-d (206)-d (207)-d (208)-b (209)-c (210)-c
+(211)-b (212)-c (213)-b (214)-b (215)-d (216)-b (217)-c (218)-c (219)-c (220)-d
+(221)-d (222)-a (223)-a (224)-d (225)-a (226)-d (227)-a (228)-a (229)-a (230)-d
+(231)-d (232)-c (233)-c (234)-b (235)-c (236)-b (237)-d (238)-b (239)-a (240)-a
+(241)-b (242)-d (243)-d (244)-b (245)-a (246)-c (247)-b (248)-c (249)-d (250)-b
+(251)-a (252)-c (253)-c (254)-a (255)-a (256)-a (257)-d (258)-b (259)-b (260)-c
+(261)-b (262)-b (263)-e (264)-b (265)-d (266)-d (267)-c (268)-c (269)-a (270)-d
+(271)-b (272)-d (273)-d (274)-b (275)-d (276)-c (277)-d (278)-d (279)-d (280)-d
+(281)-c (282)-d (283)-c (284)-d (285)-c (286)-c (287)-b (288)-b (289)-a (290)-d
+(291)-c (292)-b (293)-d (294)-b (295)-d (296)-c (297)-c (298)-b (299)-c (300)-d
+(301)-c (302)-d (303)-c (304)-b (305)-d (306)-d (307)-d (308)-d (309)-a (310)-b
+(311)-b (312)-b (313)-c (314)-b (315)-a (316)-d (317)-c (318)-b (319)-d (320)-c
+(321)-a (322)-d (323)-a (324)-a (325)-b (326)-c (327)-d (328)-b (329)-c (330)-a
+(331)-d (332)-b (333)-c (334)-a (335)-d (336)-a (337)-b (338)-a (339)-b (340)-a
+(341)-b (342)-b (343)-d (344)-b (345)-c (346)-d (347)-d (348)-b (349)-b (350)-d
+(351)-d (352)-b (353)-d (354)-c (355)-a (356)-c (357)-c (358)-a (359)-d (360)-d
+(361)-a (362)-d (363)-d (364)-d (365)-c (366)-b
+`;
+
+/* ============================================================
+   KONFIG: WYTLUMACZENIA — wyjaśnienia poprawnych odpowiedzi.
+   Pokazują się pod pytaniem PO udzieleniu odpowiedzi.
+   Format: jedno wyjaśnienie na linię, zaczynające się od „(numer)".
+   Nie każde pytanie musi mieć wyjaśnienie — dla pytań bez wpisu
+   pokaże się dyskretna notka „brak szczegółowego wytłumaczenia".
+   ============================================================ */
+const explanationsText = `
+
+`;
+
+/* ============================================================
+   PARSOWANIE
+   ============================================================ */
+function parseAll(){
+  const key={};
+  answersText.replace(/\((\d+)\)\s*-\s*([a-f](?:,[a-f])*)/gi,(m,id,ans)=>{ key[id]=ans.toLowerCase(); return m; });
+  const lines = questionsText.split('\n');
+  const out=[]; let cur=null;
+  for(const raw of lines){
+    const line=raw.trim();
+    if(!line) continue;
+    const qm=line.match(/^\((\d+)\)\s*(.*)$/);
+    const om=line.match(/^([a-f])\)\s*(.*)$/);
+    if(qm){
+      if(cur && key[cur.id] && cur.options.length) out.push(cur);
+      cur={ id:qm[1], text:qm[2], options:[], correct:key[qm[1]]||null };
+    } else if(om && cur){
+      cur.options.push({ letter:om[1], text:om[2] });
+    } else if(cur){
+      if(cur.options.length===0) cur.text += ' '+line;
+    }
+  }
+  if(cur && key[cur.id] && cur.options.length) out.push(cur);
+  return out;
+}
+const BANK = parseAll();
+if(!BANK.length){
+  try{ document.getElementById('question').textContent='Błąd: nie udało się wczytać bazy pytań.'; }catch(e){}
+}
+
+/* Wyjaśnienia: mapa { numerPytania: tekst }. Pytania bez wpisu (np. od 112 w górę)
+   po prostu nie mają wyjaśnienia — obsługuje to renderExplanation(). */
+function parseExplanations(){
+  const map={}; let cur=null;
+  explanationsText.split('\n').forEach(raw=>{
+    const line=raw.trim();
+    if(!line) return;
+    const m=line.match(/^\((\d+)\)\s*(.*)$/);
+    if(m){ cur=m[1]; map[cur]=m[2]; }
+    else if(cur){ map[cur]+=' '+line; }
+  });
+  return map;
+}
+const EXPLANATIONS = parseExplanations();
+
+/* ============================================================
+   STAN APLIKACJI I TRYBY
+   ============================================================ */
+let currentMode = 'normal'; // 'normal' lub 'test'
+let queue=[];          
+let idx=0;
+let score=0, streak=0, answered=0;        
+let wrongMap={};
+let shuffleOn=false;   // domyślnie: pierwsze uruchomienie startuje od pytania 1, bez tasowania
+let curSeq=[];
+let isAnswered=false;
+let activeBank=BANK;
+let globalXP=0;
+
+/* ====== Zakres pytań: pełna baza vs zakresy tematyczne ======
+   KONFIG: ZAKRES — przedziały numerów pytań objętych przyciskami zakresu (🧪 ProAroma, 📜 Leaks).
+   Zakres działa w poprzek trybów (nauka/test/fiszki/słabe punkty): aktywny ogranicza pulę
+   do swojego przedziału, wyłączony przywraca całość. Opanowanie pytań jest wspólne
+   (per pytanie), ale liczniki pokazują postęp w bieżącym zakresie. Sesje każdego trybu
+   są zapisywane OSOBNO dla każdego zakresu (sufiks z pola "key"). */
+const SCOPES = {
+  ackermann: { min:112, max:149, key:'am',    label:'ProAroma', btn:'btn-scope' },
+  leaks:     { min:150, max:188, key:'leaks', label:'Leaks',    btn:'btn-leaks' }
+};
+const SCOPE_KEY = 'procesyPozn_v1_scope';
+let scope = 'full';                 // 'full' | 'ackermann' | 'leaks'
+function scopedBank(){
+  const s = SCOPES[scope];
+  return s ? BANK.filter(q => +q.id >= s.min && +q.id <= s.max) : BANK;
+}
+let maxStreak=0;       // rekord najdłuższej serii (trwały, między sesjami)
+const MAXSTREAK_KEY = 'procesyPozn_v1_maxStreak';
+
+/* ====== Cofanie odpowiedzi / podgląd rozwiązanych pytań ======
+   answers[pozycja] = { picked, ok, seq } — zapamiętane odpowiedzi (do podglądu po cofnięciu).
+   history[pozycja] = snapshot — pełny stan SPRZED odpowiedzi, by móc poprawnie cofnąć
+   skutki (wynik, XP, opanowanie, powtórki) przy zmianie odpowiedzi. history jest tylko
+   w pamięci (nie w localStorage) — zmiana odpowiedzi działa w obrębie bieżącej sesji. */
+let answers={};
+let history={};
+const CHANGE_MSG = "Czy jesteś pewien, że chcesz zmienić odpowiedź?\n\nKorzystaj z tej funkcji tylko wtedy, gdy przez przypadek zaznaczyłeś/aś złą odpowiedź.";
+const NO_HISTORY_MSG = "Zmianę odpowiedzi można cofnąć tylko w trakcie tej samej sesji — zanim odświeżysz lub zamkniesz stronę.";
+
+/* ====== Ulubione ====== */
+const FAV_KEY = 'procesyPozn_v1_favorites';
+let favorites = new Set();
+let browseTab = 'all';
+
+/* ====== Dźwięk ====== */
+const SOUND_KEY = 'procesyPozn_v1_sound';
+let soundOn = true;
+let audioCtx = null;
+
+/* ====== POWTÓRKI W OBRĘBIE SESJI (expanding spaced retrieval) ======
+   Po błędzie karta wraca po krótkim (ale nie zerowym) odstępie. Po pierwszym
+   udanym przypomnieniu planowane jest POTWIERDZENIE z większym odstępem.
+   Karta „domyka się" w sesji dopiero po udanym potwierdzeniu (spaced success). */
+const RETRY_GAP_RELEARN = [3, 5];    // odstęp po błędzie (krótki, nie natychmiast)
+const RETRY_GAP_CONFIRM = [11, 18];  // odstęp potwierdzenia po pierwszym sukcesie (rozszerzony)
+const LAPSE_EXPANSION   = 3;         // każdy kolejny błąd tej samej karty dodatkowo ją oddala
+const MAX_LAPSES        = 6;         // bezpiecznik: limit ponownych wstawień jednej karty w sesji
+
+/* ====== TRWAŁE OPANOWANIE MIĘDZY SESJAMI (tylko tryb nauki) ======
+   Lekka warstwa do nauki rozłożonej na dni: słabe/nowe karty są ustawiane
+   na początku zestawu, opanowane wędrują na koniec jako lekka powtórka.
+   To NIE jest pełny harmonogram SR — kalibracja odstępów dzieje się w sesji. */
+const MASTERY_KEY = 'procesyPozn_v1_mastery';
+const MASTERY_GRADUATE = 2; // ile poprawnych „za pierwszym razem" (w różnych sesjach) = opanowane
+let mastery = {};           // { [id]: liczba } 0 = słabe, >=GRADUATE = opanowane, brak klucza = nowe
+
+// System nagrody wizualnej
+let bloom=0, peak=0;
+const INTENSITY_TARGET = 5; 
+const PENALTY = 2;
+
+/* KONFIG: POZIOMY — nazwy poziomów i progi XP, od których obowiązują */
+const LEVELS = [
+  { req: 0, name: "Wolontariuszka" },
+  { req: 100, name: "Praktykantka" },
+  { req: 200, name: "Młodsza Pielęgniarka" },
+  { req: 300, name: "Pielęgniarka Dyplomowana" },
+  { req: 400, name: "Starsza Pielęgniarka" },
+  { req: 500, name: "Specjalistka Pielęgniarstwa" },
+  { req: 700, name: "Pielęgniarka Oddziałowa" },
+  { req: 1000, name: "Pielęgniarka Naczelna" },
+  { req: 1500, name: "Bogini" },
+  { req: 2000, name: "MARTYNKA" },
+];
+
+function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+/* --- Trwałe opanowanie: odczyt/zapis/klasyfikacja --- */
+function loadMastery(){
+  try{ const m=JSON.parse(localStorage.getItem(MASTERY_KEY)); if(m && typeof m==='object') mastery=m; }catch(e){}
+}
+function saveMastery(){
+  try{ localStorage.setItem(MASTERY_KEY, JSON.stringify(mastery)); }catch(e){}
+}
+function masteryBucket(id){
+  if(!(id in mastery)) return 'new';
+  return mastery[id] >= MASTERY_GRADUATE ? 'mastered' : 'weak';
+}
+// Tryby, w których aktualizujemy trwałe opanowanie i powtórki w obrębie sesji.
+function isLearningMode(){ return currentMode==='normal' || currentMode==='weak' || currentMode==='flash'; }
+
+// op: +1 (wzmocnij) lub 'reset' (błąd kasuje opanowanie). Działa tylko w trybach nauki.
+function bumpMastery(id, op){
+  if(!isLearningMode()) return;
+  let v = (id in mastery) ? mastery[id] : 0;
+  v = (op === 'reset') ? 0 : Math.min(MASTERY_GRADUATE + 1, v + op);
+  mastery[id] = v;
+  saveMastery();
+}
+function masteredCount(){
+  // Licznik w obrębie bieżącego zakresu (pełna baza lub AM) — opanowanie samo w sobie jest wspólne.
+  return scopedBank().reduce((n,q)=> n + (masteryBucket(q.id)==='mastered' ? 1 : 0), 0);
+}
+
+/* --- Klonowanie pytania do kolejki --- */
+function cloneForQueue(useShuffle){
+  return q=>{
+    const clone={...q, isRetry:false, options:[...q.options]};
+    if(useShuffle && !q.correct.includes(',')) clone.options = shuffle(clone.options);
+    return clone;
+  };
+}
+
+function buildQueue(){
+  // Test: zawsze losowa kolejność i losowe opcje, bez priorytetyzacji.
+  if(currentMode === 'test'){
+    queue = shuffle(activeBank).map(cloneForQueue(true));
+    return;
+  }
+  // Fiszki: stała kolejność po numerach — przewidywalna talia.
+  if(currentMode === 'flash'){
+    queue = activeBank.map(cloneForQueue(false));
+    return;
+  }
+  // Słabe punkty: pytania jeszcze nieopanowane, tasowane dla urozmaicenia.
+  if(currentMode === 'weak'){
+    queue = shuffle(activeBank).map(cloneForQueue(true));
+    return;
+  }
+  // Tryb nauki z tasowaniem: słabe (wcześniej błędne) → nowe → opanowane (lekka powtórka).
+  if(shuffleOn){
+    const weak=[], fresh=[], mastered=[];
+    activeBank.forEach(q=>{
+      const b=masteryBucket(q.id);
+      (b==='weak' ? weak : b==='new' ? fresh : mastered).push(q);
+    });
+    const ordered=[...shuffle(weak), ...shuffle(fresh), ...shuffle(mastered)];
+    queue = ordered.map(cloneForQueue(true));
+  } else {
+    // Tasowanie wyłączone = świadomy przegląd po numerach 1..N (bez priorytetyzacji).
+    queue = [...activeBank].map(cloneForQueue(false));
+  }
+}
+
+/* --- Planowanie powtórki z rozszerzającym się odstępem --- */
+function gapFrom(range){ const [lo,hi]=range; return lo + Math.floor(Math.random()*(hi-lo+1)); }
+
+function insertRetry(srcQ, stage, lapses){
+  const baseQ = BANK.find(b=>b.id===srcQ.id);
+  if(!baseQ) return;
+  const retry = {...baseQ, isRetry:true, stage, lapses, options:[...baseQ.options]};
+  const useShuffle = currentMode === 'normal' ? shuffleOn : true;
+  if(useShuffle && !retry.correct.includes(',')) retry.options = shuffle(retry.options);
+  const base = (stage === 'confirm') ? gapFrom(RETRY_GAP_CONFIRM) : gapFrom(RETRY_GAP_RELEARN);
+  const extra = Math.max(0, lapses - 1) * LAPSE_EXPANSION;   // im więcej powtórnych błędów, tym dalej
+  const pos = Math.min(queue.length, idx + base + extra);
+  queue.splice(pos, 0, retry);
+}
+
+/* ============================================================
+   SYSTEM NAGRODY (logika poświaty/kolorów)
+   ============================================================ */
+function applyBloom(){
+  const intensity = Math.max(0, Math.min(1, bloom / INTENSITY_TARGET));
+  const e = intensity; 
+  
+  const colorShiftPoints = Math.max(0, bloom - INTENSITY_TARGET);
+  const accentH = (205 + colorShiftPoints * 15) % 360;
+  const accent2H = (250 + colorShiftPoints * 15) % 360;
+
+  const accentS = 22 + e * 52; 
+  const accentL = 35 + e * 23; 
+  const bgL = 5 + e * 3.5; 
+  const surfL = 9 + e * 4.5;
+
+  const r = document.documentElement.style;
+  r.setProperty('--bloom', intensity.toFixed(3));
+  r.setProperty('--accent-h', accentH.toFixed(1));
+  r.setProperty('--accent2-h', accent2H.toFixed(1));
+  r.setProperty('--accent-s', accentS.toFixed(1) + '%');
+  r.setProperty('--accent-l', accentL.toFixed(1) + '%');
+  r.setProperty('--bg-l', bgL.toFixed(1) + '%');
+  r.setProperty('--surface-l', surfL.toFixed(1) + '%');
+  
+  r.setProperty('--aurora', (e * 0.6).toFixed(3));
+  r.setProperty('--glow', (e * 70).toFixed(1) + 'px');
+}
+
+function bloomCorrect(){
+  bloom += 1;
+  peak = Math.max(peak, bloom);
+  applyBloom();
+}
+
+function bloomWrong(){
+  bloom = Math.max(0, bloom - PENALTY); 
+  applyBloom();
+}
+
+/* ============================================================
+   PERSYSTENCJA Z ROZDZIELENIEM TRYBÓW W LOCALSTORAGE
+   ============================================================ */
+function getSaveKey() {
+  const base = currentMode === 'test'  ? 'procesyPozn_v1_test'
+             : currentMode === 'weak'  ? 'procesyPozn_v1_weak'
+             : currentMode === 'flash' ? 'procesyPozn_v1_flash'
+             : 'procesyPozn_v1_normal';
+  const s = SCOPES[scope];
+  return s ? base + '_' + s.key : base;   // osobna sesja dla każdego zakresu tematycznego
+}
+
+function saveState(){
+  try{
+    const activeBankIds = activeBank.map(q => q.id);
+    localStorage.setItem(getSaveKey(), JSON.stringify({
+      queue, idx, score, streak, answered, wrongMap, shuffleOn, bloom, peak, activeBankIds, answers
+    }));
+    localStorage.setItem('procesyPozn_v1_globalXP', globalXP);
+    localStorage.setItem('procesyPozn_v1_currentMode', currentMode);
+  }catch(e){}
+}
+
+/* Uzgodnij zapisaną kolejkę z AKTUALNĄ bazą pytań.
+   Zapisana sesja przechowuje treść pytań i poprawne odpowiedzi z chwili zapisu.
+   Gdy dane (np. klucz odpowiedzi) zostały później zmienione, stara kolejka miałaby
+   nieaktualną „correct" → złe ocenianie pierwszego podejścia, mimo że powtórka (brana
+   z BANK) byłaby poprawna. Tu nadpisujemy poprawną odpowiedź i odświeżamy teksty opcji
+   z BANK, zachowując zapisaną KOLEJNOŚĆ opcji (tasowanie) i cały postęp sesji. */
+function reconcileQueueWithBank(){
+  if(!Array.isArray(queue)) return;
+  queue = queue.filter(item => item && scopedBank().some(b => b.id === item.id)); // usuń pytania spoza bazy/zakresu
+  queue.forEach(item => {
+    const base = BANK.find(b => b.id === item.id);
+    item.correct = base.correct;                       // poprawna odpowiedź zawsze z aktualnej bazy
+    const sameLetters = Array.isArray(item.options)
+      && item.options.length === base.options.length
+      && item.options.every(o => base.options.some(b => b.letter === o.letter));
+    item.options = sameLetters
+      ? item.options.map(o => ({ letter:o.letter, text: base.options.find(b=>b.letter===o.letter).text }))
+      : base.options.map(o => ({ ...o }));             // zestaw opcji się zmienił → weź z bazy
+  });
+  if(typeof idx !== 'number' || idx < 0) idx = 0;
+  if(idx > queue.length) idx = queue.length;
+}
+
+function loadState(){
+  try{
+    const gXP = localStorage.getItem('procesyPozn_v1_globalXP');
+    if(gXP !== null) globalXP = parseInt(gXP, 10);
+
+    const s = JSON.parse(localStorage.getItem(getSaveKey()));
+    if(!s||!s.queue||!s.queue.length) return false;
+
+    ({queue,idx,score,streak,answered,wrongMap,shuffleOn,bloom,peak}=s);
+    answers = (s.answers && typeof s.answers === 'object') ? s.answers : {};
+    history = {};                      // snapshoty żyją tylko w pamięci jednej sesji
+    const lenBefore = queue.length;
+    reconcileQueueWithBank();          // napraw ewentualny rozjazd z aktualną bazą
+    if(!queue.length) return false;    // po uzgodnieniu nic nie zostało → zacznij od nowa
+    if(queue.length !== lenBefore) answers = {}; // pozycje się przesunęły → podgląd nieaktualny
+
+    if((currentMode === 'test' || currentMode === 'weak') && s.activeBankIds){
+      activeBank = s.activeBankIds.map(id => BANK.find(q => q.id === id)).filter(Boolean);
+    } else {
+      activeBank = scopedBank();   // 'normal' i 'flash' korzystają z całego bieżącego zakresu
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+function clearState(){ 
+  try{ 
+    localStorage.removeItem(getSaveKey()); 
+    localStorage.setItem('procesyPozn_v1_globalXP', globalXP); 
+  }catch(e){} 
+}
+
+/* ============================================================
+   RENDER INTERFEJSU
+   ============================================================ */
+const $=id=>document.getElementById(id);
+
+function updateStats(){
+  $('cur').textContent = Math.min(answered+1, activeBank.length);
+  $('tot').textContent = activeBank.length;
+  $('score').textContent = score;
+  $('streak').textContent = streak;
+  { const sm=$('streak-max'); if(sm) sm.textContent = maxStreak; }
+  $('progress').firstElementChild.style.width = (answered/activeBank.length*100)+'%';
+
+  const mc=$('mastered-count'), bs=$('bank-size');
+  if(mc) mc.textContent = masteredCount();
+  if(bs) bs.textContent = scopedBank().length;
+
+  let curLvl = LEVELS[0], nextLvl = LEVELS[1];
+  for(let i=0; i<LEVELS.length; i++){
+    if(globalXP >= LEVELS[i].req){
+      curLvl = LEVELS[i];
+      nextLvl = LEVELS[i+1] || null;
+    }
+  }
+  $('lvl-name').textContent = curLvl.name;
+  $('lvl-xp').textContent = nextLvl ? `${globalXP}/${nextLvl.req}` : globalXP;
+
+  // Licznik „słabych punktów" (pytania w toku, jeszcze nieopanowane) w bieżącym zakresie.
+  const wc=$('mi-weak-count');
+  if(wc){
+    const n=scopedBank().reduce((a,q)=> a + (masteryBucket(q.id)==='weak' ? 1 : 0), 0);
+    wc.textContent=n; wc.classList.toggle('hidden', n===0);
+  }
+}
+
+function updateUIForMode(){
+  const mstat=$('mastery-stat');
+  const m=currentMode;
+  // Główny przycisk: w zwykłej nauce → wejście w test; w pozostałych trybach → powrót do nauki.
+  $('btn-mode').textContent = (m==='normal') ? '🎓 Tryb testu' : '← Tryb nauki';
+  // Dopisek w nagłówku zależny od trybu. KONFIG: NAZWA-STRONY (stałe na początku skryptu)
+  // W zakresie AM test jest mniejszy niż 40, więc liczbę pytań pokazujemy dynamicznie.
+  const testN = Math.min(40, scopedBank().length); /* KONFIG: TEST */
+  const sfx = m==='test'  ? (scope==='full' ? BRAND_SUFFIX_TEST : '— Test ('+testN+' '+pluralPytan(testN)+')')
+            : m==='weak'  ? BRAND_SUFFIX_WEAK
+            : m==='flash' ? BRAND_SUFFIX_FLASH
+            : BRAND_SUFFIX_LEARN;
+  $('brand-em').textContent = SCOPES[scope] ? sfx + ' · ' + SCOPES[scope].label : sfx;
+  // Tasowanie ma sens tylko w zwykłej nauce.
+  $('shuffle-switch').classList.toggle('hidden', m!=='normal');
+  // „Opanowane" kształtują tylko tryby nauki — ukryj w teście.
+  if(mstat) mstat.classList.toggle('hidden', m==='test');
+  // Podświetl aktywny tryb nauki w menu.
+  const miW=$('mi-weak'), miF=$('mi-flash');
+  if(miW) miW.classList.toggle('active', m==='weak');
+  if(miF) miF.classList.toggle('active', m==='flash');
+}
+
+/* Wyjaśnienie poprawnej odpowiedzi — pokazywane PO udzieleniu odpowiedzi.
+   Dla pytań bez wpisu w EXPLANATIONS (np. od 112 w górę) pokazuje dyskretną notkę. */
+function renderExplanation(q, box){
+  const txt = EXPLANATIONS[q.id];
+  const div = document.createElement('div');
+  if(txt){
+    div.className = 'explain';
+    div.innerHTML = '<div class="explain-h">💡 Wyjaśnienie</div><div class="explain-body">'+escapeHtml(txt)+'</div>';
+  } else {
+    div.className = 'explain none';
+    const id = +q.id;
+    let msg = 'Do tego pytania nie ma jeszcze wyjaśnienia.';
+    if(id >= SCOPES.ackermann.min && id <= SCOPES.ackermann.max)
+      msg = 'To pytanie od dr. Ackermann, więc to pytanie nie ma wyjaśnienia :D';
+    else if(id >= SCOPES.leaks.min && id <= SCOPES.leaks.max)
+      msg = 'To pytanie z egzaminu, więc nie ma do niego wyjaśnienia :D';
+    div.innerHTML = '<div class="explain-h">💡 Wyjaśnienie</div><div class="explain-body">'+msg+'</div>';
+  }
+  box.appendChild(div);
+}
+
+/* ============================================================
+   TRYB FISZEK (aktywne przypominanie)
+   ------------------------------------------------------------
+   Front: samo pytanie. Po „Pokaż odpowiedź" odsłaniamy poprawną
+   odpowiedź ORAZ wyjaśnienie, a użytkownik sam ocenia, czy wiedział
+   (ocena zasila opanowanie, XP i powtórki tak jak zwykła odpowiedź).
+   ============================================================ */
+function correctAnswerHtml(q){
+  if(q.correct.includes(',')){
+    const txt=q.correct.split(',').map(l=>{const o=q.options.find(x=>x.letter===l);return o?escapeHtml(o.text):l;}).join(' → ');
+    return '<b>Prawidłowa kolejność:</b> '+txt;
+  }
+  const co=q.options.find(o=>o.letter===q.correct);
+  return co ? '<b>'+co.letter.toUpperCase()+')</b> '+escapeHtml(co.text) : escapeHtml(q.correct);
+}
+function renderFlashAnswer(q, box){
+  const fb=document.createElement('div'); fb.className='feedback ok flash-answer';
+  fb.innerHTML='Poprawna odpowiedź: '+correctAnswerHtml(q);
+  box.appendChild(fb);
+  renderExplanation(q, box);
+}
+function renderFlashcard(q, box){
+  box.classList.remove('review');
+  $('dontknow').classList.add('hidden');
+  const ans=answers[idx];
+  if(ans){                                   // karta już oceniona (np. po cofnięciu) — pokaż tył
+    isAnswered=true;
+    renderFlashAnswer(q, box);
+    const note=document.createElement('div'); note.className='review-hint';
+    note.textContent = ans.ok ? 'Twoja ocena: wiedziałem/-am ✓' : 'Twoja ocena: do powtórki ✗';
+    box.appendChild(note);
+    $('next').classList.remove('hidden');
+    return;
+  }
+  // Front — tylko pytanie i przycisk odsłonięcia.
+  isAnswered=false;
+  $('next').classList.add('hidden');
+  const hint=document.createElement('div'); hint.className='flash-hint';
+  hint.textContent='Spróbuj przypomnieć sobie odpowiedź, a potem ją odsłoń.';
+  box.appendChild(hint);
+  const btn=document.createElement('button');
+  btn.id='flash-reveal'; btn.className='primary'; btn.type='button';
+  btn.innerHTML='🔄 Pokaż odpowiedź <span class="kbd">Enter</span>';
+  btn.onclick=()=>revealFlash(q, box);
+  box.appendChild(btn);
+}
+function revealFlash(q, box){
+  if(isAnswered) return;
+  const r=$('flash-reveal'); if(r) r.remove();
+  const h=box.querySelector('.flash-hint'); if(h) h.remove();
+  renderFlashAnswer(q, box);
+  const rate=document.createElement('div'); rate.className='flash-rate';
+  const no=document.createElement('button');  no.type='button';  no.className='flash-btn no';  no.textContent='✗ Nie wiedziałem';
+  const yes=document.createElement('button'); yes.type='button'; yes.className='flash-btn yes'; yes.textContent='✓ Wiedziałem';
+  no.onclick=()=>rateFlash(q,false); yes.onclick=()=>rateFlash(q,true);
+  rate.appendChild(no); rate.appendChild(yes);
+  box.appendChild(rate);
+}
+function rateFlash(q, ok){
+  if(isAnswered) return; isAnswered=true;
+  history[idx]=snapshotState();
+  if(ok){ correct(q); } else { mistake(q, '(fiszka — nie wiedziałem)'); }
+  answers[idx]={picked: ok?'(fiszka — wiedziałem)':'(fiszka — do powtórki)', ok, flash:true, seq:q.correct.includes(',')};
+  saveState();
+  showQuestion();                               // przerysuj jako oceniony tył fiszki
+}
+
+function showQuestion(){
+  isAnswered=false;
+  if(idx>=queue.length){ return finish(); }
+  const q=queue[idx];
+
+  $('retry-badge').classList.toggle('hidden', !q.isRetry);
+  if(q.isRetry){
+    $('retry-badge').textContent = (q.stage === 'confirm')
+      ? '✓ Potwierdzenie — wcześniej błędne'
+      : '⟳ Powtórka — wcześniej błędne';
+  }
+  $('qnum').textContent='Pytanie '+(currentMode === 'test' ? (idx+1) : q.id);
+  $('question').textContent=q.text;
+  updateBackBtn();
+  updateFavBtn();
+
+  const box=$('options'); box.innerHTML='';
+
+  if(currentMode === 'flash'){ renderFlashcard(q, box); updateStats(); return; }
+
+  const ans = answers[idx];
+
+  if(ans){
+    // ===== Stan przeglądania: pytanie jest już rozwiązane (po cofnięciu) =====
+    isAnswered=true;
+    box.classList.add('review');
+    $('dontknow').classList.add('hidden');
+
+    if(q.correct.includes(',')){
+      renderSeqReview(q, box);
+    } else {
+      q.options.forEach(opt=>{
+        const div=document.createElement('div');
+        div.className='option'; div.dataset.letter=opt.letter;
+        if(opt.letter===q.correct) div.classList.add('correct');
+        else if(opt.letter===ans.picked) div.classList.add('wrong');
+        else div.classList.add('dim');
+        div.innerHTML='<span class="key">'+opt.letter.toUpperCase()+'</span><span>'+opt.text+'</span>';
+        div.title='Kliknij, aby zmienić odpowiedź';
+        div.onclick=()=> attemptChangeAnswer(opt.letter);
+        box.appendChild(div);
+      });
+      const hint=document.createElement('div');
+      hint.className='review-hint';
+      hint.textContent='To pytanie masz już rozwiązane. Kliknij inną opcję, aby zmienić odpowiedź.';
+      box.appendChild(hint);
+    }
+    renderExplanation(q, box);
+    $('next').classList.remove('hidden');
+    updateStats();
+    return;
+  }
+
+  // ===== Stan świeży: pytanie bez odpowiedzi =====
+  box.classList.remove('review');
+  $('next').classList.add('hidden');
+  $('dontknow').classList.remove('hidden');
+
+  if(q.correct.includes(',')){ renderSeq(q,box); return; }
+
+  q.options.forEach(opt=>{
+    const div=document.createElement('div');
+    div.className='option'; div.dataset.letter=opt.letter;
+    div.innerHTML='<span class="key">'+opt.letter.toUpperCase()+'</span><span>'+opt.text+'</span>';
+    div.onclick=()=>{ if(!isAnswered) selectOption(div, opt.letter, q); };
+    box.appendChild(div);
+  });
+  updateStats();
+}
+
+function selectOption(el, letter, q){
+  isAnswered=true;
+  history[idx]=snapshotState();                 // stan SPRZED zastosowania skutków odpowiedzi
+  if(letter===q.correct){ correct(q); } else { mistake(q, letter); }
+  answers[idx]={picked:letter, ok:(letter===q.correct)};
+  saveState();
+  showQuestion();                               // przerysuj jako stan przeglądania (z możliwością zmiany)
+}
+
+/* Render rozwiązanego pytania sekwencyjnego (po cofnięciu). */
+function renderSeqReview(q, box){
+  const ans=answers[idx];
+  const order=q.correct.split(',');
+  const correctText=order.map(l=>{const o=q.options.find(x=>x.letter===l);return o?o.text:l;}).join(' → ');
+  const gaveUp = ans.picked==='(nie znam odpowiedzi)';
+  const fb=document.createElement('div'); fb.className='feedback '+(ans.ok?'ok':'no');
+  if(ans.ok){
+    fb.innerHTML='Prawidłowa kolejność: <b>'+correctText+'</b>';
+  } else if(gaveUp){
+    fb.innerHTML='Nie udzielono odpowiedzi. Poprawna kolejność: <b>'+correctText+'</b>';
+  } else {
+    const userText=(ans.picked||'').split(',').map(l=>{const o=q.options.find(x=>x.letter===l);return o?o.text:l;}).join(' → ');
+    fb.innerHTML='Twoja kolejność: <b>'+userText+'</b><br>Poprawna: <b>'+correctText+'</b>';
+  }
+  box.appendChild(fb);
+  renderExplanation(q, box);
+  const chg=document.createElement('button');
+  chg.type='button'; chg.className='ghost'; chg.style.marginTop='12px';
+  chg.textContent='↻ Zmień odpowiedź';
+  chg.onclick=attemptChangeSeq;
+  box.appendChild(chg);
+}
+
+/* ====== Cofanie i zmiana odpowiedzi ====== */
+function snapshotState(){
+  return {
+    queue: JSON.parse(JSON.stringify(queue)),
+    idx, score, streak, answered,
+    wrongMap: JSON.parse(JSON.stringify(wrongMap)),
+    bloom, peak, globalXP, maxStreak,
+    mastery: JSON.parse(JSON.stringify(mastery)),
+    catCounters: JSON.parse(JSON.stringify(catCounters)),
+    recentCats: recentCats.slice()
+  };
+}
+function restoreState(s){
+  queue = JSON.parse(JSON.stringify(s.queue));
+  idx=s.idx; score=s.score; streak=s.streak; answered=s.answered;
+  wrongMap = JSON.parse(JSON.stringify(s.wrongMap));
+  bloom=s.bloom; peak=s.peak; globalXP=s.globalXP; maxStreak=s.maxStreak;
+  mastery = JSON.parse(JSON.stringify(s.mastery));
+  catCounters = JSON.parse(JSON.stringify(s.catCounters));
+  recentCats = s.recentCats.slice();
+  // Te wartości są też trzymane osobno w localStorage — uzgodnij je po cofnięciu.
+  saveMastery(); saveCatState();
+  try{ localStorage.setItem('procesyPozn_v1_globalXP', globalXP); localStorage.setItem(MAXSTREAK_KEY, maxStreak); }catch(e){}
+}
+/* Przywróć stan sprzed odpowiedzi na pozycji i; usuń podgląd/snapshoty dla pozycji >= i. */
+function rewindTo(i){
+  i=+i;
+  const s=history[i];
+  if(!s) return false;
+  restoreState(s);                              // ustawia także idx = i
+  Object.keys(answers).forEach(k=>{ if(+k>=i) delete answers[k]; });
+  Object.keys(history).forEach(k=>{ if(+k>=i) delete history[k]; });
+  isAnswered=false; curSeq=[];
+  applyBloom();
+  return true;
+}
+function attemptChangeAnswer(letter){
+  if(!history[idx]){ alert(NO_HISTORY_MSG); return; }
+  if(!confirm(CHANGE_MSG)) return;
+  if(!rewindTo(idx)) return;
+  showQuestion();                               // przerysuj jako pytanie do rozwiązania
+  const q=queue[idx]; if(!q) return;
+  const div=[...$('options').querySelectorAll('.option')].find(o=>o.dataset.letter===letter);
+  if(div) selectOption(div, letter, q);
+}
+function attemptChangeSeq(){
+  if(!history[idx]){ alert(NO_HISTORY_MSG); return; }
+  if(!confirm(CHANGE_MSG)) return;
+  if(!rewindTo(idx)) return;
+  showQuestion();                               // przerysuj jako interaktywną układankę
+}
+function updateBackBtn(){
+  const b=$('back'); if(b) b.classList.toggle('hidden', idx<=0);
+}
+
+function renderSeq(q,box){
+  const forceShuffle = currentMode === 'normal' ? shuffleOn : true;
+  if(!curSeq.length || curSeq._for!==q.id){
+    curSeq = forceShuffle ? shuffle(q.options) : [...q.options];
+    curSeq._for=q.id;
+  }
+  drawSeq(q,box);
+  const btn=document.createElement('button');
+  btn.className='primary'; btn.id='checkseq'; btn.textContent='Sprawdź kolejność';
+  btn.onclick=()=>checkSeq(q,box,btn);
+  box.appendChild(btn);
+  updateStats();
+}
+function drawSeq(q,box){
+  box.querySelectorAll('.seq').forEach(n=>n.remove());
+  const frag=document.createDocumentFragment();
+  curSeq.forEach((opt,i)=>{
+    const row=document.createElement('div'); row.className='seq';
+    row.innerHTML='<div class="ctrl"><button '+(i===0?'disabled':'')+'>↑</button>'+
+                  '<button '+(i===curSeq.length-1?'disabled':'')+'>↓</button></div>'+
+                  '<div class="txt">'+opt.text+'</div>';
+    const [up,down]=row.querySelectorAll('button');
+    up.onclick=()=>{ if(i>0&&!isAnswered){[curSeq[i],curSeq[i-1]]=[curSeq[i-1],curSeq[i]];drawSeq(q,box);} };
+    down.onclick=()=>{ if(i<curSeq.length-1&&!isAnswered){[curSeq[i],curSeq[i+1]]=[curSeq[i+1],curSeq[i]];drawSeq(q,box);} };
+    frag.appendChild(row);
+  });
+  const btn=box.querySelector('#checkseq');
+  box.insertBefore(frag, btn||null);
+}
+function checkSeq(q,box,btn){
+  if(isAnswered) return; isAnswered=true;
+  history[idx]=snapshotState();
+  const userOrder=curSeq.map(o=>o.letter).join(',');
+  const ok=userOrder===q.correct;
+  if(ok){ correct(q); } else { mistake(q, userOrder); }
+  answers[idx]={picked:userOrder, ok, seq:true};
+  curSeq=[];
+  saveState();
+  showQuestion();                               // przerysuj jako stan przeglądania
+}
+
+function correct(q){
+  streak++;
+  if(streak > maxStreak){ maxStreak = streak; try{ localStorage.setItem(MAXSTREAK_KEY, maxStreak); }catch(e){} }
+  if(!q.isRetry){
+    // Pierwsze podejście do pytania — liczy się do wyniku, XP (+3) i opanowania.
+    score++; answered++; globalXP += 3;
+    bumpMastery(q.id, +1);
+  } else {
+    // Poprawna odpowiedź w powtórce — mniejsza nagroda XP (+1).
+    globalXP += 1;
+    if(isLearningMode()){
+      if(q.stage === 'relearn'){
+        // Pierwszy sukces po błędzie → zaplanuj POTWIERDZENIE z większym odstępem (spaced success).
+        insertRetry(q, 'confirm', q.lapses || 1);
+      } else if(q.stage === 'confirm'){
+        // Udane potwierdzenie po dłuższym odstępie → karta domknięta w sesji + wzmocnienie trwałe.
+        bumpMastery(q.id, +1);
+      }
+    }
+  }
+  registerCat('good');
+  bloomCorrect();
+  playCorrectSound();
+}
+
+function mistake(q, userAnswerStr){
+  streak=0;
+  playWrongSound();
+  const lapses = (q.lapses || 0) + 1;
+  if(!q.isRetry){
+    answered++;
+    if(!wrongMap[q.id]){
+      wrongMap[q.id] = { ref: BANK.find(b=>b.id===q.id), picked: userAnswerStr };
+    }
+  }
+  bumpMastery(q.id, 'reset'); // błąd kasuje trwałe opanowanie → priorytet w kolejnych sesjach
+  bloomWrong();
+  registerCat('bad');
+
+  // Ponowne wstawienie tylko w trybach nauki i do limitu (bezpiecznik przed niekończącą się sesją).
+  if(isLearningMode() && lapses <= MAX_LAPSES){
+    insertRetry(q, 'relearn', lapses);
+  }
+}
+
+/* „Nie znam odpowiedzi" — odsłania poprawną odpowiedź na zielono i zalicza
+   pytanie jako błędne (uruchamia mechanizm powtórek tak jak zwykły błąd). */
+function giveUp(){
+  if(isAnswered) return;
+  const q=queue[idx]; if(!q) return;
+  isAnswered=true;
+  history[idx]=snapshotState();
+  curSeq=[];
+  mistake(q, '(nie znam odpowiedzi)');
+  answers[idx]={picked:'(nie znam odpowiedzi)', ok:false, seq:q.correct.includes(',')};
+  saveState();
+  showQuestion();                               // pokaż poprawną odpowiedź w stanie przeglądania
+}
+
+$('next').onclick=()=>{ idx++; if(idx>=queue.length) finish(); else { showQuestion(); saveState(); } };
+$('back').onclick=()=>{ if(idx>0){ idx--; curSeq=[]; showQuestion(); saveState(); } };
+$('fav-btn').onclick=()=>{ const q=queue[idx]; if(q) toggleFavorite(q.id); };
+
+function finish(){
+  $('quiz').classList.add('hidden');
+  const s=$('summary'); s.classList.remove('hidden');
+  $('fscore').textContent=score;
+  $('ftot').textContent=activeBank.length;
+  $('fpct').textContent=Math.round(score/activeBank.length*100);
+  const keys=Object.keys(wrongMap);
+  const list=$('errlist'); list.innerHTML='';
+  
+  if(keys.length){
+    $('errs').classList.remove('hidden');
+    keys.sort((a,b)=>a-b).forEach(k=>{
+      const errData = wrongMap[k];
+      // Bierz pytanie z AKTUALNEJ bazy (zapisany errData.ref mógłby być nieaktualny po edycji danych).
+      const q = BANK.find(b=>b.id===k) || errData.ref;
+      const picked = errData.picked;
+      
+      const qText = `<div class="q">(${q.id}) ${q.text}</div>`;
+      const opts = `<div class="opts">` + q.options.map(o => `<div><b>${o.letter})</b> ${o.text}</div>`).join('') + `</div>`;
+
+      let pickedText = picked;
+      if(!q.correct.includes(',')){
+         const po = q.options.find(o=>o.letter===picked);
+         if(po) pickedText = `<b>${po.letter})</b> ${po.text}`;
+      } else {
+         pickedText = picked.split(',').map(l=>{const o=q.options.find(x=>x.letter===l);return o?`<b>${l})</b> ${o.text}`:l;}).join(' → ');
+      }
+      const badHTML = `<div class="a-bad">Zaznaczono: ${pickedText}</div>`;
+
+      let correctText = q.correct;
+      if(!q.correct.includes(',')){
+         const co = q.options.find(o=>o.letter===q.correct);
+         if(co) correctText = `<b>${co.letter})</b> ${co.text}`;
+      } else {
+         correctText = q.correct.split(',').map(l=>{const o=q.options.find(x=>x.letter===l);return o?`<b>${l})</b> ${o.text}`:l;}).join(' → ');
+      }
+      const goodHTML = `<div class="a-good">Poprawna odpowiedź: ${correctText}</div>`;
+
+      const d=document.createElement('div'); d.className='err';
+      d.innerHTML = qText + opts + badHTML + goodHTML;
+      list.appendChild(d);
+    });
+  } else $('errs').classList.add('hidden');
+
+  // Celebracja po ukończeniu CAŁEGO zestawu (tryb nauki, nie test).
+  const banner = $('completion-banner');
+  if(currentMode === 'normal' && answered >= activeBank.length){
+    if(banner){
+      // Liczba pytań ustawiana dynamicznie — działa też dla mniejszego zakresu AM.
+      banner.textContent = '🐱 Gratulacje! Ukończono wszystkie ' + activeBank.length + ' ' + pluralPytan(activeBank.length) + '! 🎉';
+      banner.classList.remove('hidden');
+    }
+    celebrateCompletion();
+  } else if(banner){
+    banner.classList.add('hidden');
+  }
+
+  clearState();
+}
+
+/* ============================================================
+   STEROWANIE SESJĄ I PRZEŁĄCZANIE TRYBÓW
+   ============================================================ */
+$('shuffle-toggle').addEventListener('change', e=>{
+  // Tasowanie to ustawienie STARTOWE zestawu. W trybie testu nie działa w ogóle.
+  if(currentMode === 'test'){
+    e.target.checked = shuffleOn;            // cofnij — w teście kolejność jest stała
+    $('shuffle-switch').classList.toggle('on', shuffleOn);
+    return;
+  }
+  // Sesja w toku → zmiana ułoży zestaw od nowa. Ostrzeż, zamiast po cichu kasować postęp.
+  if(answered > 0 && !confirm("Zmiana tasowania ułoży zestaw od nowa i wyzeruje postęp BIEŻĄCEJ sesji (trwałe opanowanie zostaje). Kontynuować?")){
+    e.target.checked = shuffleOn;            // cofnij przełącznik do poprzedniego stanu
+    $('shuffle-switch').classList.toggle('on', shuffleOn);
+    return;
+  }
+  shuffleOn = e.target.checked;
+  $('shuffle-switch').classList.toggle('on', shuffleOn);
+  startFresh(true);
+});
+
+/* Ustawia zestaw pytań (activeBank) dla bieżącego trybu.
+   Zwraca false, gdy tryb „słabe punkty" nie ma czego ćwiczyć (wraca wtedy do nauki). */
+function setupActiveBankForMode(){
+  if(currentMode === 'test'){
+    activeBank = shuffle([...scopedBank()]).slice(0, 40); /* KONFIG: TEST — liczba pytań w trybie testu (przy mniejszym zakresie bierze tyle, ile jest) */
+  } else if(currentMode === 'weak'){
+    activeBank = scopedBank().filter(q => masteryBucket(q.id) === 'weak');   // pytania w toku (nieopanowane)
+    if(!activeBank.length){
+      currentMode = 'normal';
+      try{ localStorage.setItem('procesyPozn_v1_currentMode','normal'); }catch(e){}
+      updateUIForMode();
+      activeBank = scopedBank();
+      return false;
+    }
+  } else {
+    activeBank = scopedBank();   // 'normal' i 'flash' → cały bieżący zakres
+  }
+  return true;
+}
+
+/* Wznów zapisaną sesję bieżącego trybu albo (jeśli jej nie ma) zacznij nową. */
+function resumeOrFresh(){
+  if(loadState()){
+    $('shuffle-toggle').checked=shuffleOn;
+    $('shuffle-switch').classList.toggle('on', shuffleOn);
+    if(idx >= queue.length){ startFresh(false); }
+    else { $('summary').classList.add('hidden'); $('quiz').classList.remove('hidden'); applyBloom(); showQuestion(); }
+    return true;
+  }
+  return false;
+}
+
+/* Wspólne wejście w bieżący tryb+zakres: wznów zapisaną sesję albo zbuduj nową. */
+function activateModeSession(){
+  if(resumeOrFresh()) return;                   // jest zapisana sesja tego trybu i zakresu → wznów
+
+  const ok = setupActiveBankForMode();          // brak sesji → przygotuj nową
+  if(!ok){
+    alert('🎉 Świetna robota! Nie masz teraz słabych punktów — wszystkie przerobione pytania są opanowane.\n\nĆwicz w trybie nauki lub fiszek, a tu wrócą te, z którymi masz kłopot.');
+    if(resumeOrFresh()) return;                 // po powrocie do nauki — wznów istniejącą sesję, jeśli jest
+  }
+  startFresh(false);
+}
+
+function switchMode(target){
+  if(target === currentMode) return;
+  saveState();                                  // zapisz sesję dotychczasowego trybu
+  currentMode = target;
+  try{ localStorage.setItem('procesyPozn_v1_currentMode', currentMode); }catch(e){}
+  updateUIForMode();
+  activateModeSession();
+}
+
+function toggleMode(){ switchMode(currentMode === 'normal' ? 'test' : 'normal'); }
+function enterWeakMode(){ switchMode(currentMode === 'weak'  ? 'normal' : 'weak'); }
+function enterFlashMode(){ switchMode(currentMode === 'flash' ? 'normal' : 'flash'); }
+
+/* ====== Przełączniki zakresu (🧪 ProAroma, 📜 Leaks) ======
+   Wzajemnie się wykluczają. Nic nie kasuje: sesja bieżącego zakresu jest zapisywana,
+   a po powrocie wznawiana. Ponowne kliknięcie aktywnego zakresu wraca do pełnej bazy. */
+function updateScopeBtns(){
+  Object.keys(SCOPES).forEach(name=>{
+    const cfg=SCOPES[name], b=$(cfg.btn); if(!b) return;
+    const on = scope === name;
+    b.classList.toggle('active', on);
+    b.title = on ? 'Wyłącz — wróć do wszystkich pytań'
+                 : 'Tylko pytania z zakresu '+cfg.label+' ('+cfg.min+'–'+cfg.max+')';
+  });
+}
+function setScope(target){
+  saveState();                                  // zapisz sesję dotychczasowego zakresu
+  scope = (scope === target) ? 'full' : target; // klik aktywnego = powrót do pełnej bazy
+  try{ localStorage.setItem(SCOPE_KEY, scope); }catch(e){}
+  updateScopeBtns();
+  updateUIForMode();
+  activateModeSession();
+}
+function toggleScope(){ setScope('ackermann'); }   // zachowane dla wstecznej zgodności (przycisk ProAroma)
+function toggleLeaks(){ setScope('leaks'); }
+
+function startFresh(keepBloom){
+  buildQueue();
+  idx=0; score=0; streak=0; answered=0; wrongMap={}; curSeq=[]; answers={}; history={};
+  if(!keepBloom){ bloom=0; peak=0; }
+  applyBloom();
+  $('summary').classList.add('hidden');
+  $('quiz').classList.remove('hidden');
+  showQuestion(); saveState();
+}
+
+function restart(){ startFresh(false); }
+
+/* ============================================================
+   EKSPORT / IMPORT POSTĘPU
+   ============================================================
+   Cały postęp siedzi w localStorage pod kluczami „procesyPozn_v1_*"
+   (opanowanie pytań, XP/poziom, bieżące sesje, liczniki kotów).
+   localStorage jest osobny dla każdej przeglądarki/urządzenia, więc
+   eksport do pliku pozwala przenieść postęp np. z laptopa na telefon. */
+/* KONFIG: ZAPIS-POSTEPU — przedrostek kluczy localStorage.
+   Gdy z szablonu robisz stronę dla INNEGO przedmiotu hostowaną w tej
+   samej domenie, zamień w CAŁYM pliku frazę "procesyPozn_v1" na nową
+   (np. "psychoQuiz_v1"), żeby postępy obu stron się nie mieszały. */
+const SAVE_PREFIX = 'procesyPozn_v1_';
+
+function collectProgress(){
+  const data = {};
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(SAVE_PREFIX)) data[k] = localStorage.getItem(k);
+  }
+  return data;
+}
+
+function exportProgress(){
+  // Najpierw zapisz bieżący stan, żeby plik zawierał najświeższy postęp.
+  try{ saveState(); saveMastery(); saveCatState(); }catch(e){}
+  const payload = {
+    app: 'podstawy-pielegniarstwa',   // KONFIG: EKSPORT — identyfikator aplikacji w pliku eksportu
+    schema: 1,
+    exportedAt: new Date().toISOString(),
+    data: collectProgress()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'podstawy-pielegniarstwa-' + new Date().toISOString().slice(0,10) + '.json';   // KONFIG: EKSPORT — nazwa pobieranego pliku
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importProgress(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try{
+      const parsed = JSON.parse(reader.result);
+      data = (parsed && parsed.data && typeof parsed.data==='object') ? parsed.data : parsed;
+    }catch(e){ alert('Nieprawidłowy plik — to nie jest poprawny plik postępu (.json).'); return; }
+    const keys = data && typeof data==='object'
+      ? Object.keys(data).filter(k => k.startsWith(SAVE_PREFIX)) : [];
+    if(!keys.length){ alert('W pliku nie znaleziono danych postępu.'); return; }
+    if(!confirm('Wczytać postęp z pliku? Obecny postęp na TYM urządzeniu zostanie nadpisany.')) return;
+    // Usuń bieżący postęp, potem wgraj z pliku (czysty stan, bez resztek).
+    for(let i=localStorage.length-1;i>=0;i--){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(SAVE_PREFIX)) localStorage.removeItem(k);
+    }
+    keys.forEach(k => { try{ localStorage.setItem(k, data[k]); }catch(e){} });
+    alert('Postęp wczytany. Strona zostanie odświeżona.');
+    location.reload();
+  };
+  reader.onerror = () => alert('Nie udało się odczytać pliku.');
+  reader.readAsText(file);
+}
+
+$('import-file').addEventListener('change', e => {
+  const f = e.target.files && e.target.files[0];
+  if(f) importProgress(f);
+  e.target.value = '';   // pozwól ponownie wybrać ten sam plik
+});
+
+function resetSession(){
+  if(score > 0 && !confirm("Zresetować bieżącą sesję? Obecny postęp zostanie utracony.")) return;
+  clearState();
+  const ok = setupActiveBankForMode();
+  if(!ok) alert('🎉 Nie masz już słabych punktów — wszystkie przerobione pytania są opanowane.');
+  shuffleOn=false;
+  $('shuffle-toggle').checked=false;
+  $('shuffle-switch').classList.remove('on');
+  startFresh(false);
+}
+
+/* ============================================================
+   KONFIG: KOTY — nagroda: losowy kot (foldery „dobrze" / „zle")
+   ============================================================
+   Po wylosowanej liczbie (10–30) poprawnych odpowiedzi pojawia się kot
+   z folderu „dobrze", a po analogicznej liczbie błędnych — z folderu „zle".
+   Licznik startuje od pierwszej odpowiedzi danego typu i zeruje się po
+   każdym pokazanym kocie (z nowo wylosowanym progiem).
+   Zdjęcia są odczytywane z folderu, gdy strona jest serwowana po HTTP;
+   przy otwarciu pliku z dysku używana jest lista zapasowa poniżej. */
+const CAT_DIRS = { good:'dobrze', bad:'zle' };   // KONFIG: KOTY — nazwy folderów ze zdjęciami
+const CAT_EXT  = /\.(jpe?g|png|gif|webp|avif|bmp)$/i;
+const CAT_MIN  = 10, CAT_MAX = 30;               // KONFIG: KOTY — co ile odpowiedzi (losowo z zakresu) pojawia się kot
+
+// KONFIG: KOTY — lista zapasowa plików, używana gdy nie da się odczytać zawartości folderu (otwarcie pliku z dysku).
+const CAT_FALLBACK = {
+  good: [
+    "00886ad035d6b7ae082fbcff766c043c.jpg","0e79beabeb6a60551f3fa044778a6d72.jpg",
+    "2c4885d467eb72239225028e2d1f4804.jpg","3-kotek.gif",
+    "40b6f3b77b0f526a28ba75a927df668d.jpg","4561-funny-cat-29.png",
+    "a73f6073c40925b29adffadd062aeeef.jpg","funny-cat-pic-v0-tyzusvmzmr7a1.jpg",
+    "goofy-ahh-picture-rr1ke3fqtb7gfind.jpg","goofy-funny-cat.gif","hq720.jpg",
+    "images (3).jpg","images (4).jpg","premium_photo-1677545183884-421157b2da02.avif"
+  ],
+  bad: [
+    "1b0aaf7e1a24a4ab26a886406d2c59d8.jpg","355256d03a154675b096096e0a0eb038.jpg",
+    "56701d7c5b5cf49f4e0f4adaf35e0d31.jpg","97df8142297e40f889bb3072a0d0bf0f.jpg",
+    "Funny-Cat-Pfp-Meme.jpg.webp","cat-side-eye.gif",
+    "crying-cat-meme-template-thumbnail-4e806a85.webp","ee4729624a55e50a603407685d1ae25c.jpg",
+    "flat,750x,075,f-pad,750x1000,f8f8f8.jpg","images (1).jpg","images (2).jpg",
+    "images.jpg","images1.jpg","images2.jpg","noFilter.webp"
+  ]
+};
+
+let catFiles  = { good:[...CAT_FALLBACK.good], bad:[...CAT_FALLBACK.bad] };
+let recentCats = [];                          // ostatnio pokazane („typ/plik"), maks. 2
+const CAT_STATE_KEY = 'procesyPozn_v1_cats';
+function newCatThreshold(){ return CAT_MIN + Math.floor(Math.random()*(CAT_MAX-CAT_MIN+1)); }
+let catCounters = { good:{n:0,target:newCatThreshold()}, bad:{n:0,target:newCatThreshold()} };
+
+function saveCatState(){
+  try{ localStorage.setItem(CAT_STATE_KEY, JSON.stringify({catCounters, recentCats})); }catch(e){}
+}
+function loadCatState(){
+  try{
+    const s=JSON.parse(localStorage.getItem(CAT_STATE_KEY));
+    if(s && s.catCounters){ catCounters=s.catCounters; recentCats=Array.isArray(s.recentCats)?s.recentCats:[]; }
+  }catch(e){}
+  // Dostosuj zapisane progi do aktualnego zakresu (np. po zmianie CAT_MIN/CAT_MAX),
+  // żeby nowy zakres działał od razu, a nie dopiero po kolejnym losowaniu.
+  for(const k of Object.keys(CAT_DIRS)){
+    let c = catCounters[k];
+    if(!c || typeof c!=='object'){ catCounters[k] = {n:0, target:newCatThreshold()}; continue; }
+    if(typeof c.n!=='number' || c.n<0) c.n = 0;
+    if(typeof c.target!=='number' || c.target<CAT_MIN || c.target>CAT_MAX) c.target = newCatThreshold();
+  }
+}
+
+// Wykrywanie zdjęć z autoindexu serwera (np. python -m http.server, nginx autoindex).
+async function catsFromIndex(dir){
+  try{
+    const res = await fetch(dir + '/');
+    if(!res.ok) return [];
+    const html = await res.text();
+    const doc  = new DOMParser().parseFromString(html, 'text/html');
+    return [...doc.querySelectorAll('a[href]')]
+      .map(a => a.getAttribute('href') || '')
+      .map(h => { try{ return decodeURIComponent(h.split('?')[0].split('#')[0].split('/').filter(Boolean).pop() || ''); }catch(_){ return ''; } })
+      .filter(n => CAT_EXT.test(n));
+  }catch(e){ return []; }
+}
+
+// Wykrywanie zdjęć na GitHub Pages przez GitHub Contents API (host *.github.io).
+// Dzięki temu wystarczy wrzucić nowe zdjęcie do repo — pojawi się samo, bez zmian w kodzie.
+async function catsFromGitHub(dir){
+  try{
+    const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+    if(!m) return [];
+    const owner = m[1];
+    const segs  = location.pathname.split('/').filter(Boolean);
+    const repo  = segs.length ? segs[0] : (owner + '.github.io');   // project page lub root page
+    const api   = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(dir)}`;
+    const res   = await fetch(api, { headers:{ 'Accept':'application/vnd.github+json' } });
+    if(!res.ok) return [];
+    const arr = await res.json();
+    if(!Array.isArray(arr)) return [];
+    return arr.filter(it => it.type === 'file' && CAT_EXT.test(it.name)).map(it => it.name);
+  }catch(e){ return []; }
+}
+
+// Próbuje wykryć zdjęcia wprost z folderu; gdy się nie uda — zostaje lista zapasowa.
+async function discoverCats(){
+  for(const key of Object.keys(CAT_DIRS)){
+    const dir = CAT_DIRS[key];
+    let names = await catsFromIndex(dir);                  // lokalny serwer z autoindexem
+    if(!names.length) names = await catsFromGitHub(dir);   // GitHub Pages → GitHub API
+    const uniq = [...new Set(names)];
+    if(uniq.length) catFiles[key] = uniq;
+  }
+}
+
+// Losowanie z pominięciem 2 ostatnio pokazanych zdjęć (by to samo nie wyszło pod rząd).
+function pickCat(key){
+  const files = catFiles[key];
+  if(!files || !files.length) return null;
+  const ids = files.map(f => key + '/' + f);
+  let pool = ids.filter(id => !recentCats.includes(id));
+  if(!pool.length) pool = ids.filter(id => id !== recentCats[recentCats.length-1]);
+  if(!pool.length) pool = ids;
+  const chosenId = pool[Math.floor(Math.random()*pool.length)];
+  recentCats.push(chosenId);
+  while(recentCats.length > 2) recentCats.shift();
+  const file = chosenId.slice((key + '/').length);
+  return CAT_DIRS[key] + '/' + encodeURIComponent(file);
+}
+
+function showCat(key){
+  const src = pickCat(key);
+  if(!src) return;
+  let overlay = document.getElementById('cat-overlay');
+  if(!overlay){ overlay=document.createElement('div'); overlay.id='cat-overlay'; document.body.appendChild(overlay); }
+  overlay.innerHTML='';
+  const img = document.createElement('img');
+  img.className='cat-pop';
+  img.alt = key==='good' ? 'Kot — dobra odpowiedź' : 'Kot — zła odpowiedź';
+  img.src = src;
+  img.addEventListener('animationend', ()=> img.remove());
+  overlay.appendChild(img);
+}
+
+// Liczy odpowiedzi danego typu i pokazuje kota po osiągnięciu wylosowanego progu.
+function registerCat(key){
+  const c = catCounters[key]; if(!c) return;
+  c.n++;
+  if(c.n >= c.target){
+    showCat(key);
+    c.n = 0;
+    c.target = newCatThreshold();
+  }
+  saveCatState();
+}
+
+/* Celebracja ukończenia całej bazy — emotki kotów spadające „z nieba". */
+const CAT_EMOJIS = ['🐱','😸','😹','😻','😺','😼','😽','🙀','🐈','😿','😾'];
+function celebrateCompletion(){
+  // Uszanuj preferencję ograniczenia animacji — baner i tak zostaje.
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = document.createElement('div');
+  layer.id = 'cat-rain';
+  const count = 50;
+  let maxEnd = 0;
+  for(let i=0;i<count;i++){
+    const s = document.createElement('span');
+    s.className = 'cat-drop';
+    s.textContent = CAT_EMOJIS[Math.floor(Math.random()*CAT_EMOJIS.length)];
+    const dur   = 2.6 + Math.random()*2.8;          // czas spadania 2.6–5.4 s
+    const delay = Math.random()*2.6;                // rozłożenie w czasie 0–2.6 s
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.fontSize = (1.2 + Math.random()*1.8) + 'rem';
+    s.style.setProperty('--spin', (Math.random()*720 - 360).toFixed(0) + 'deg');
+    s.style.setProperty('--drift', (Math.random()*16 - 8).toFixed(1) + 'vw');
+    s.style.animationDuration = dur.toFixed(2) + 's';
+    s.style.animationDelay = delay.toFixed(2) + 's';
+    layer.appendChild(s);
+    maxEnd = Math.max(maxEnd, dur + delay);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), (maxEnd + 0.5) * 1000);
+}
+
+/* ============================================================
+   ULUBIONE PYTANIA
+   ============================================================ */
+function loadFavorites(){
+  try{ const a=JSON.parse(localStorage.getItem(FAV_KEY)); if(Array.isArray(a)) favorites=new Set(a.map(String)); }catch(e){}
+}
+function saveFavorites(){
+  try{ localStorage.setItem(FAV_KEY, JSON.stringify([...favorites])); }catch(e){}
+}
+function isFav(id){ return favorites.has(String(id)); }
+function toggleFavorite(id){
+  id=String(id);
+  if(favorites.has(id)) favorites.delete(id); else favorites.add(id);
+  saveFavorites();
+  updateFavBtn(); updateFavCount();
+  if(!$('browse-overlay').classList.contains('hidden')) renderBrowseList();
+}
+function updateFavBtn(){
+  const b=$('fav-btn'); if(!b) return;
+  const q=queue[idx];
+  if(!q){ b.classList.add('hidden'); return; }
+  b.classList.remove('hidden');
+  const on=isFav(q.id);
+  b.textContent = on ? '★' : '☆';
+  b.classList.toggle('active', on);
+  b.title = on ? 'Usuń z ulubionych' : 'Dodaj do ulubionych';
+}
+function updateFavCount(){
+  const n=favorites.size;
+  const badge=$('fav-count');
+  if(badge){ badge.textContent=n; badge.classList.toggle('hidden', n===0); }
+  const tab=$('tab-fav'); if(tab) tab.textContent='★ Ulubione ('+n+')';
+}
+
+/* ============================================================
+   DŹWIĘKI ODPOWIEDZI (Web Audio — bez plików zewnętrznych)
+   ============================================================ */
+function ensureAudio(){
+  if(audioCtx) return audioCtx;
+  try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ audioCtx=null; }
+  return audioCtx;
+}
+function playCorrectSound(){
+  if(!soundOn) return;
+  const ctx=ensureAudio(); if(!ctx) return;
+  if(ctx.state==='suspended') ctx.resume();
+  const t0=ctx.currentTime;
+  // Krótki, wesoły dwudźwięk w górę.
+  [[659.25, 0], [987.77, 0.10]].forEach(([f,dt])=>{
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type='sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001, t0+dt);
+    g.gain.linearRampToValueAtTime(0.18, t0+dt+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0+dt+0.20);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t0+dt); o.stop(t0+dt+0.22);
+  });
+}
+function playWrongSound(){
+  if(!soundOn) return;
+  const ctx=ensureAudio(); if(!ctx) return;
+  if(ctx.state==='suspended') ctx.resume();
+  const t0=ctx.currentTime;
+  // Delikatny, neutralny ton w dół (nie ostry).
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(320, t0);
+  o.frequency.exponentialRampToValueAtTime(160, t0+0.20);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.linearRampToValueAtTime(0.15, t0+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0+0.30);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t0); o.stop(t0+0.32);
+}
+$('sound-toggle').addEventListener('change', e=>{
+  soundOn = e.target.checked;
+  $('sound-switch').classList.toggle('on', soundOn);
+  try{ localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); }catch(e){}
+  if(soundOn) playCorrectSound();              // krótki podgląd po włączeniu
+});
+
+/* ============================================================
+   PRZEGLĄDANIE PYTAŃ / ULUBIONE (modal)
+   ============================================================ */
+function openBrowse(tab){
+  browseTab = tab || 'all';
+  updateBrowseTabs();
+  $('browse-search').value='';
+  renderBrowseList();
+  $('browse-overlay').classList.remove('hidden');
+}
+function closeBrowse(){ $('browse-overlay').classList.add('hidden'); }
+
+/* ====== Menu „⚙" (ustawienia + postęp) ====== */
+function toggleMenu(){
+  const pop=$('menu-pop');
+  const willOpen = pop.classList.contains('hidden');
+  pop.classList.toggle('hidden', !willOpen);
+  $('menu-btn').setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+}
+function closeMenu(){
+  $('menu-pop').classList.add('hidden');
+  $('menu-btn').setAttribute('aria-expanded','false');
+}
+document.addEventListener('click', e=>{
+  if($('menu-pop').classList.contains('hidden')) return;
+  if(e.target.closest('#menu-pop') || e.target.closest('#menu-btn')) return;  // klik w menu/przycisk → zostaw
+  closeMenu();
+});
+function setBrowseTab(t){ browseTab=t; updateBrowseTabs(); renderBrowseList(); }
+function updateBrowseTabs(){
+  $('tab-all').classList.toggle('active', browseTab==='all');
+  $('tab-fav').classList.toggle('active', browseTab==='fav');
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function pluralPytan(n){
+  if(n===1) return 'pytanie';
+  const d=n%10, dd=n%100;
+  if(d>=2 && d<=4 && !(dd>=12 && dd<=14)) return 'pytania';
+  return 'pytań';
+}
+function renderBrowseList(){
+  const term=($('browse-search').value||'').trim().toLowerCase();
+  let items = scopedBank().slice().sort((a,b)=> (+a.id)-(+b.id));   // przeglądanie też respektuje zakres AM
+  if(browseTab==='fav') items = items.filter(q=> isFav(q.id));
+  if(term) items = items.filter(q=>
+    ('('+q.id+') '+q.text+' '+q.options.map(o=>o.text).join(' ')).toLowerCase().includes(term));
+
+  const cnt=$('browse-count'), list=$('browse-list');
+  if(browseTab==='fav' && !favorites.size){
+    cnt.textContent='';
+    list.innerHTML='<div class="browse-empty">Nie masz jeszcze ulubionych pytań.<br>Dodawaj je gwiazdką ☆ podczas nauki lub w zakładce „Wszystkie".</div>';
+    return;
+  }
+  if(!items.length){
+    cnt.textContent='';
+    list.innerHTML='<div class="browse-empty">Brak pytań pasujących do wyszukiwania.</div>';
+    return;
+  }
+  cnt.textContent = items.length+' '+pluralPytan(items.length);
+
+  list.innerHTML = items.map(q=>{
+    const fav=isFav(q.id);
+    let optsHtml;
+    if(q.correct.includes(',')){
+      const order=q.correct.split(',');
+      const txt=order.map(l=>{const o=q.options.find(x=>x.letter===l);return o?escapeHtml(o.text):l;}).join(' → ');
+      optsHtml='<div class="browse-opt correct"><b>Poprawna kolejność:</b> '+txt+'</div>'
+        + q.options.map(o=>'<div class="browse-opt"><b>'+o.letter+')</b> '+escapeHtml(o.text)+'</div>').join('');
+    } else {
+      optsHtml=q.options.map(o=>{
+        const ok=o.letter===q.correct;
+        return '<div class="browse-opt'+(ok?' correct':'')+'"><b>'+o.letter+')</b> '+escapeHtml(o.text)+(ok?' ✓':'')+'</div>';
+      }).join('');
+    }
+    return '<div class="browse-q">'
+      + '<div class="browse-q-head"><span class="browse-q-id">Pytanie '+q.id+'</span>'
+      + '<button class="browse-fav'+(fav?' active':'')+'" type="button" onclick="toggleFavorite(\''+q.id+'\')" '
+      + 'title="'+(fav?'Usuń z ulubionych':'Dodaj do ulubionych')+'" aria-label="Ulubione">'+(fav?'★':'☆')+'</button></div>'
+      + '<div class="browse-q-text">'+escapeHtml(q.text)+'</div>'
+      + '<div class="browse-opts">'+optsHtml+'</div></div>';
+  }).join('');
+}
+
+function init(){
+  loadMastery();
+  loadCatState();
+  loadFavorites();
+  { const sp=localStorage.getItem(SOUND_KEY); if(sp!==null) soundOn = sp!=='0'; }
+  $('sound-toggle').checked = soundOn;
+  $('sound-switch').classList.toggle('on', soundOn);
+  updateFavCount();
+  discoverCats();
+  { const ms = localStorage.getItem(MAXSTREAK_KEY); if(ms !== null) maxStreak = parseInt(ms,10) || 0; }
+  const savedMode = localStorage.getItem('procesyPozn_v1_currentMode');
+  if (savedMode) currentMode = savedMode;
+  { const sc = localStorage.getItem(SCOPE_KEY); if(sc === 'full' || SCOPES[sc]) scope = sc; }
+  updateScopeBtns();
+
+  updateUIForMode();
+  
+  if(loadState()){
+    $('shuffle-toggle').checked=shuffleOn;
+    $('shuffle-switch').classList.toggle('on', shuffleOn);
+    applyBloom();
+    if(idx>=queue.length){ finish(); }
+    else { $('summary').classList.add('hidden'); $('quiz').classList.remove('hidden'); showQuestion(); }
+  } else {
+    setupActiveBankForMode();   // obsługuje też tryby 'weak'/'flash' (i powrót do nauki, gdy brak słabych punktów)
+    $('shuffle-toggle').checked=shuffleOn;
+    $('shuffle-switch').classList.toggle('on', shuffleOn);
+    updateStats();
+    startFresh(false);
+  }
+}
+
+/* ====== Okienko „Co nowego?" ====== */
+function openWhatsNew(){ $('whatsnew-overlay').classList.remove('hidden'); }
+function closeWhatsNew(){ $('whatsnew-overlay').classList.add('hidden'); }
+function anyModalOpen(){
+  return !$('whatsnew-overlay').classList.contains('hidden')
+      || !$('browse-overlay').classList.contains('hidden')
+      || !$('menu-pop').classList.contains('hidden');
+}
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Escape') return;
+  if(!$('menu-pop').classList.contains('hidden')) closeMenu();
+  else if(!$('browse-overlay').classList.contains('hidden')) closeBrowse();
+  else if(!$('whatsnew-overlay').classList.contains('hidden')) closeWhatsNew();
+});
+
+document.addEventListener('keydown', e=>{
+  if(anyModalOpen()) return;                    // modal otwarty → nie łap skrótów quizu
+  if($('quiz').classList.contains('hidden')) return;
+  const q=queue[idx]; if(!q) return;
+  if(e.key==='Enter'){
+    if(!$('next').classList.contains('hidden')) $('next').click();
+    else if(currentMode==='flash' && !isAnswered){ const r=$('flash-reveal'); if(r) r.click(); }
+    else if(q.correct.includes(',') && !isAnswered){ const b=$('checkseq'); if(b) b.click(); }
+    return;
+  }
+  if(e.key==='ArrowLeft'){ if(idx>0) $('back').click(); return; }
+  if(currentMode!=='flash' && !isAnswered && !q.correct.includes(',')){
+    const k=e.key.toLowerCase();
+    if('abcdef'.includes(k)){
+      document.querySelectorAll('.option').forEach(o=>{ if(o.dataset.letter===k) o.click(); });
+    }
+  }
+});
+
+init();
+</script>
+</body>
+</html>
