@@ -202,19 +202,6 @@ header.top{
 .btn-mode:hover{background:var(--accent);color:var(--on-accent);transform:translateY(-1px);
   box-shadow:0 8px 20px -8px hsl(var(--accent-h) 70% 45% / .5)}
 
-/* ====== Przyciski zakresu (trwały stan wciśnięcia) ====== */
-/* ProAroma — złoty */
-#btn-scope{border-color:var(--gold-bd);color:var(--gold)}
-#btn-scope:hover,#btn-scope.active{background:var(--gold);color:var(--bg);border-color:transparent;
-  box-shadow:0 8px 20px -8px hsl(36 70% 45% / .55)}
-#btn-scope.active:hover{filter:brightness(1.08)}
-/* Leaks — fioletowy */
-#btn-leaks{border-color:hsl(265 50% 62% / .5);color:hsl(265 72% 76%)}
-#btn-leaks:hover,#btn-leaks.active{background:hsl(265 55% 58%);color:#fff;border-color:transparent;
-  box-shadow:0 8px 20px -8px hsl(265 60% 50% / .55)}
-#btn-leaks.active:hover{filter:brightness(1.08)}
-html[data-theme="light"] #btn-leaks{color:hsl(265 55% 50%)}
-
 /* ====== Pasek postępu ====== */
 #progress{height:6px;border-radius:999px;background:var(--field);border:1px solid var(--line);overflow:hidden;margin-bottom:22px}
 #progress > div{height:100%;width:0;border-radius:999px;
@@ -573,8 +560,6 @@ html[data-theme="light"] .wn-overlay{background:hsl(228 40% 30% / .25)}
 
   <div class="toolbar">
     <button class="btn-mode" id="btn-mode" onclick="toggleMode()">🎓 Tryb testu</button>
-    <button class="btn-mode" id="btn-scope" onclick="toggleScope()" title="Tylko pytania dr Ackermann (112–149)">🧪 ProAroma</button>
-    <button class="btn-mode" id="btn-leaks" onclick="toggleLeaks()" title="Tylko pytania z zakresu Leaks (150–188)">📜 Leaks</button>
     <div class="tool-cluster">
       <button class="tool-icon" id="browse-open-btn" onclick="openBrowse('all')" title="Przeglądaj wszystkie pytania (bez odpowiadania)" aria-label="Przeglądaj pytania">📖</button>
       <button class="tool-icon" id="fav-open-btn" onclick="openBrowse('fav')" title="Twoje ulubione pytania" aria-label="Ulubione pytania">★<span id="fav-count" class="tool-badge hidden">0</span></button>
@@ -4324,8 +4309,6 @@ function setScope(target){
   updateUIForMode();
   activateModeSession();
 }
-function toggleScope(){ setScope('ackermann'); }   // zachowane dla wstecznej zgodności (przycisk ProAroma)
-function toggleLeaks(){ setScope('leaks'); }
 
 function startFresh(keepBloom){
   buildQueue();
@@ -4766,7 +4749,8 @@ function init(){
   { const ms = localStorage.getItem(MAXSTREAK_KEY); if(ms !== null) maxStreak = parseInt(ms,10) || 0; }
   const savedMode = localStorage.getItem('procesyPozn_v1_currentMode');
   if (savedMode) currentMode = savedMode;
-  { const sc = localStorage.getItem(SCOPE_KEY); if(sc === 'full' || SCOPES[sc]) scope = sc; }
+  scope = 'full';   // przyciski zakresu (ProAroma/Leaks) usunięte — zawsze pełna baza
+  try{ localStorage.removeItem(SCOPE_KEY); }catch(e){}
   updateScopeBtns();
 
   updateUIForMode();
