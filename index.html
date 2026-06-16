@@ -630,7 +630,7 @@ html[data-theme="light"] .wn-overlay{background:hsl(228 40% 30% / .25)}
   </div>
 
   <!-- KONFIG: WERSJA — numer wersji aplikacji widoczny w stopce -->
-  <footer class="credit">Maciej Skiba | v1.10.0</footer>
+  <footer class="credit">Maciej Skiba | v1.10.1</footer>
   <div class="whatsnew-wrap">
     <button class="whatsnew-btn" onclick="openWhatsNew()">Co nowego?</button>
   </div>
@@ -644,7 +644,8 @@ html[data-theme="light"] .wn-overlay{background:hsl(228 40% 30% / .25)}
     <div class="wn-ver">Najnowsze zmiany</div>
     <!-- KONFIG: CO-NOWEGO — lista zmian w okienku „Co nowego?" (najnowsze na górze) -->
     <ul class="wn-list">
-      <li><b>Pytania</b> Dodano część <span class="wn-em">pierwszą</span> pytań.</li>
+      <li><b>Wydanie</b> Udostępniono nową bazę pytań, dedykowaną do nauki <span class="wn-em">Podstaw pielęgniarstwa</span>.</li>
+      <li><b>Poprawki</b> Zaktualizowano klucz odpowiedzi oraz wyeliminowano błędy w istniejących pytaniach.</li>
     </ul>
   </div>
 </div>
@@ -693,7 +694,7 @@ document.getElementById('brand-name').textContent = BRAND_NAME;
    wybór zapisuje się w localStorage i ma pierwszeństwo przed domyślnym.
    ============================================================ */
 const DEFAULT_THEME = 'dark';
-const THEME_KEY = 'procesyPozn_v1_theme';
+const THEME_KEY = 'podstawyPiel_v1_theme';
 function setTheme(t){
   document.documentElement.dataset.theme = t;
   try{ localStorage.setItem(THEME_KEY, t); }catch(e){}
@@ -3476,14 +3477,14 @@ const SCOPES = {
   ackermann: { min:112, max:149, key:'am',    label:'ProAroma', btn:'btn-scope' },
   leaks:     { min:150, max:188, key:'leaks', label:'Leaks',    btn:'btn-leaks' }
 };
-const SCOPE_KEY = 'procesyPozn_v1_scope';
+const SCOPE_KEY = 'podstawyPiel_v1_scope';
 let scope = 'full';                 // 'full' | 'ackermann' | 'leaks'
 function scopedBank(){
   const s = SCOPES[scope];
   return s ? BANK.filter(q => +q.id >= s.min && +q.id <= s.max) : BANK;
 }
 let maxStreak=0;       // rekord najdłuższej serii (trwały, między sesjami)
-const MAXSTREAK_KEY = 'procesyPozn_v1_maxStreak';
+const MAXSTREAK_KEY = 'podstawyPiel_v1_maxStreak';
 
 /* ====== Cofanie odpowiedzi / podgląd rozwiązanych pytań ======
    answers[pozycja] = { picked, ok, seq } — zapamiętane odpowiedzi (do podglądu po cofnięciu).
@@ -3496,12 +3497,12 @@ const CHANGE_MSG = "Czy jesteś pewien, że chcesz zmienić odpowiedź?\n\nKorzy
 const NO_HISTORY_MSG = "Zmianę odpowiedzi można cofnąć tylko w trakcie tej samej sesji — zanim odświeżysz lub zamkniesz stronę.";
 
 /* ====== Ulubione ====== */
-const FAV_KEY = 'procesyPozn_v1_favorites';
+const FAV_KEY = 'podstawyPiel_v1_favorites';
 let favorites = new Set();
 let browseTab = 'all';
 
 /* ====== Dźwięk ====== */
-const SOUND_KEY = 'procesyPozn_v1_sound';
+const SOUND_KEY = 'podstawyPiel_v1_sound';
 let soundOn = true;
 let audioCtx = null;
 
@@ -3518,7 +3519,7 @@ const MAX_LAPSES        = 6;         // bezpiecznik: limit ponownych wstawień j
    Lekka warstwa do nauki rozłożonej na dni: słabe/nowe karty są ustawiane
    na początku zestawu, opanowane wędrują na koniec jako lekka powtórka.
    To NIE jest pełny harmonogram SR — kalibracja odstępów dzieje się w sesji. */
-const MASTERY_KEY = 'procesyPozn_v1_mastery';
+const MASTERY_KEY = 'podstawyPiel_v1_mastery';
 const MASTERY_GRADUATE = 2; // ile poprawnych „za pierwszym razem" (w różnych sesjach) = opanowane
 let mastery = {};           // { [id]: liczba } 0 = słabe, >=GRADUATE = opanowane, brak klucza = nowe
 
@@ -3669,10 +3670,10 @@ function bloomWrong(){
    PERSYSTENCJA Z ROZDZIELENIEM TRYBÓW W LOCALSTORAGE
    ============================================================ */
 function getSaveKey() {
-  const base = currentMode === 'test'  ? 'procesyPozn_v1_test'
-             : currentMode === 'weak'  ? 'procesyPozn_v1_weak'
-             : currentMode === 'flash' ? 'procesyPozn_v1_flash'
-             : 'procesyPozn_v1_normal';
+  const base = currentMode === 'test'  ? 'podstawyPiel_v1_test'
+             : currentMode === 'weak'  ? 'podstawyPiel_v1_weak'
+             : currentMode === 'flash' ? 'podstawyPiel_v1_flash'
+             : 'podstawyPiel_v1_normal';
   const s = SCOPES[scope];
   return s ? base + '_' + s.key : base;   // osobna sesja dla każdego zakresu tematycznego
 }
@@ -3683,8 +3684,8 @@ function saveState(){
     localStorage.setItem(getSaveKey(), JSON.stringify({
       queue, idx, score, streak, answered, wrongMap, shuffleOn, bloom, peak, activeBankIds, answers
     }));
-    localStorage.setItem('procesyPozn_v1_globalXP', globalXP);
-    localStorage.setItem('procesyPozn_v1_currentMode', currentMode);
+    localStorage.setItem('podstawyPiel_v1_globalXP', globalXP);
+    localStorage.setItem('podstawyPiel_v1_currentMode', currentMode);
   }catch(e){}
 }
 
@@ -3713,7 +3714,7 @@ function reconcileQueueWithBank(){
 
 function loadState(){
   try{
-    const gXP = localStorage.getItem('procesyPozn_v1_globalXP');
+    const gXP = localStorage.getItem('podstawyPiel_v1_globalXP');
     if(gXP !== null) globalXP = parseInt(gXP, 10);
 
     const s = JSON.parse(localStorage.getItem(getSaveKey()));
@@ -3739,7 +3740,7 @@ function loadState(){
 function clearState(){ 
   try{ 
     localStorage.removeItem(getSaveKey()); 
-    localStorage.setItem('procesyPozn_v1_globalXP', globalXP); 
+    localStorage.setItem('podstawyPiel_v1_globalXP', globalXP); 
   }catch(e){} 
 }
 
@@ -4014,7 +4015,7 @@ function restoreState(s){
   recentCats = s.recentCats.slice();
   // Te wartości są też trzymane osobno w localStorage — uzgodnij je po cofnięciu.
   saveMastery(); saveCatState();
-  try{ localStorage.setItem('procesyPozn_v1_globalXP', globalXP); localStorage.setItem(MAXSTREAK_KEY, maxStreak); }catch(e){}
+  try{ localStorage.setItem('podstawyPiel_v1_globalXP', globalXP); localStorage.setItem(MAXSTREAK_KEY, maxStreak); }catch(e){}
 }
 /* Przywróć stan sprzed odpowiedzi na pozycji i; usuń podgląd/snapshoty dla pozycji >= i. */
 function rewindTo(i){
@@ -4241,7 +4242,7 @@ function setupActiveBankForMode(){
     activeBank = scopedBank().filter(q => masteryBucket(q.id) === 'weak');   // pytania w toku (nieopanowane)
     if(!activeBank.length){
       currentMode = 'normal';
-      try{ localStorage.setItem('procesyPozn_v1_currentMode','normal'); }catch(e){}
+      try{ localStorage.setItem('podstawyPiel_v1_currentMode','normal'); }catch(e){}
       updateUIForMode();
       activeBank = scopedBank();
       return false;
@@ -4280,7 +4281,7 @@ function switchMode(target){
   if(target === currentMode) return;
   saveState();                                  // zapisz sesję dotychczasowego trybu
   currentMode = target;
-  try{ localStorage.setItem('procesyPozn_v1_currentMode', currentMode); }catch(e){}
+  try{ localStorage.setItem('podstawyPiel_v1_currentMode', currentMode); }catch(e){}
   updateUIForMode();
   activateModeSession();
 }
@@ -4325,15 +4326,15 @@ function restart(){ startFresh(false); }
 /* ============================================================
    EKSPORT / IMPORT POSTĘPU
    ============================================================
-   Cały postęp siedzi w localStorage pod kluczami „procesyPozn_v1_*"
+   Cały postęp siedzi w localStorage pod kluczami „podstawyPiel_v1_*"
    (opanowanie pytań, XP/poziom, bieżące sesje, liczniki kotów).
    localStorage jest osobny dla każdej przeglądarki/urządzenia, więc
    eksport do pliku pozwala przenieść postęp np. z laptopa na telefon. */
 /* KONFIG: ZAPIS-POSTEPU — przedrostek kluczy localStorage.
    Gdy z szablonu robisz stronę dla INNEGO przedmiotu hostowaną w tej
-   samej domenie, zamień w CAŁYM pliku frazę "procesyPozn_v1" na nową
+   samej domenie, zamień w CAŁYM pliku frazę "podstawyPiel_v1" na nową
    (np. "psychoQuiz_v1"), żeby postępy obu stron się nie mieszały. */
-const SAVE_PREFIX = 'procesyPozn_v1_';
+const SAVE_PREFIX = 'podstawyPiel_v1_';
 
 function collectProgress(){
   const data = {};
@@ -4439,7 +4440,7 @@ const CAT_FALLBACK = {
 
 let catFiles  = { good:[...CAT_FALLBACK.good], bad:[...CAT_FALLBACK.bad] };
 let recentCats = [];                          // ostatnio pokazane („typ/plik"), maks. 2
-const CAT_STATE_KEY = 'procesyPozn_v1_cats';
+const CAT_STATE_KEY = 'podstawyPiel_v1_cats';
 function newCatThreshold(){ return CAT_MIN + Math.floor(Math.random()*(CAT_MAX-CAT_MIN+1)); }
 let catCounters = { good:{n:0,target:newCatThreshold()}, bad:{n:0,target:newCatThreshold()} };
 
@@ -4747,7 +4748,7 @@ function init(){
   updateFavCount();
   discoverCats();
   { const ms = localStorage.getItem(MAXSTREAK_KEY); if(ms !== null) maxStreak = parseInt(ms,10) || 0; }
-  const savedMode = localStorage.getItem('procesyPozn_v1_currentMode');
+  const savedMode = localStorage.getItem('podstawyPiel_v1_currentMode');
   if (savedMode) currentMode = savedMode;
   scope = 'full';   // przyciski zakresu (ProAroma/Leaks) usunięte — zawsze pełna baza
   try{ localStorage.removeItem(SCOPE_KEY); }catch(e){}
